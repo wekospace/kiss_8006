@@ -3,12 +3,9 @@
 import spidev
 import time
 
-speed = 50000
+from k8006 import *
 
-spi = spidev.SpiDev()
-spi.open(0,0)
-spi.max_speed_hz = speed
-spi.mode = 0b00
+speed = 50000
 
 def int_to_chr(int):
     return chr(int).decode('latin-1')
@@ -76,14 +73,32 @@ data = [0x56, 0x45, 0x36] # REC disk is a clock-turning
 data = [0x56, 0x45, 0x37] # REC disk is a clock-turning
 
 data = [0x56, 0x77] # Blank screen
-send(data)
 
-display_text("Go Go Go Trop de texte")
-time.sleep(1)
+k8006 = K8006()
+
+#for i in range(0x30, 0x38):
+#    data = [0x56, 0x45, i]
+#    k8006.send(data)
+#    time.sleep(3)
+
+#data = [0x56, 0x77] # Blank screen
+#k8006.send(data)
+#
+#k8006.display_text("Classe Go Go Go")
+#time.sleep(1)
+#
+#k8006.rawsend(off)
+#time.sleep(1)
+#k8006.rawsend(red)
+#time.sleep(1)
+#k8006.rawsend(green)
+#time.sleep(1)
+#k8006.rawsend(orange)
+#time.sleep(1)
 
 # #06VN1 -> 0x4e => ZZZ
 # #06VA1 => All ON (Crash)
-#send([ord('V'), ord('A'), 0x31])
+k8006.send([ord('V'), ord('A'), 0x31])
 
 # VSA => Am
 # VSC => Ch
