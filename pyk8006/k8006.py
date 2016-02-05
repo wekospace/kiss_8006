@@ -54,8 +54,6 @@ class K8006LowLevel:
 # VSc => Clock
 # VSt => Track
 
-# VC => left clock
-# Vc => center clock
 
 from enum import Enum
 
@@ -90,13 +88,14 @@ class K8006():
             self._lv.sendCommand(commands[0])
             self._lv.sendCommand(commands[1])
 
+    # VC => left clock
     def setTrackClock(self, text):
         if text is None:
             self._lv.sendCommand("Vz")
         else:
             self._lv.sendCommand("VC" + text)
 
-    # Middle clock
+    # Vc => center clock
     def setClock(self, text):
         if text is None:
             self._lv.sendCommand("Vq")
@@ -110,9 +109,6 @@ class K8006():
 
     def clear(self):
         self._lv.sendCommand("Vw")
-
-    def setDummy(self, text):
-        self._lv.sendCommand("Vd" + text)
 
     def readButtons(self):
         data = [0xaa]
