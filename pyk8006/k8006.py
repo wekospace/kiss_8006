@@ -3,10 +3,6 @@
 
 import spidev
 import time
-
-def int_to_chr(int):
-    return chr(int).decode('latin-1')
-
 def text_to_bytearray(text):
     return text.encode('iso8859-1', errors='replace')
 
@@ -24,9 +20,7 @@ class K8006LowLevel:
         print(data)
         resp = self.spi.xfer(data, self.speed, 50000)
         if self.debug: print("--> " + str([hex(i) for i in data]))
-        #print "> " + str(''.join([int_to_chr(i) for i in data]))
         if self.debug: print("<-- " + str([hex(i) for i in resp]))
-        #print "> " + str([int_to_chr(i) for i in resp])
         return resp
 
     def sendRawPayload(self, payload):
