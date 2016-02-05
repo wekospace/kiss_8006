@@ -18,23 +18,23 @@ fp.clear()
 #   | |  __/>  <| |_ 
 #   |_|\___/_/\_\\__|
 #
-fp.setText("Hello")
+fp.set_text("Hello")
 time.sleep(1)
-fp.setFlashText(10, "Flash")
+fp.set_flash_text(10, "Flash")
 time.sleep(2)
-fp.setRotatingText(1, 2, "This text will be displayed twice")
+fp.set_scrolling_text(1, 2, "This text will be displayed twice")
 time.sleep(3)
-fp.setText("123456789012")
+fp.set_text("123456789012")
 time.sleep(1)
-fp.setText("@&é\"'(§è!çà)")
+fp.set_text("@&é\"'(§è!çà)")
 time.sleep(1)
-fp.setText("#-^$ù`,;:=_*")
+fp.set_text("#-^$ù`,;:=_*")
 time.sleep(1)
-fp.setText("%£?./+€~|<>ë") # € is replaced
+fp.set_text("%£?./+€~|<>ë") # € is replaced
 time.sleep(1)
-fp.setText("“‘{¶«¡Çø}—É[")
+fp.set_text("“‘{¶«¡Çø}—É[")
 time.sleep(1)
-fp.setText("å»ÛÁØ]")
+fp.set_text("å»ÛÁØ]")
 time.sleep(1)
 
 #  _   _                           _      
@@ -52,15 +52,15 @@ fp.setTime(None)
 time.sleep(1)
 
 now = datetime.now()
-fp.setTrackClock(now.strftime("0%H%M"))
+fp.set_track_clock(now.strftime("0%H%M"))
 time.sleep(1)
-fp.setTrackClock(None)
+fp.set_track_clock(None)
 time.sleep(1)
 
 now = datetime.now()
-fp.setClock(now.strftime("0%H%M"))
+fp.set_clock(now.strftime("0%H%M"))
 time.sleep(1)
-fp.setClock(None)
+fp.set_clock(None)
 time.sleep(1)
 
 #  _             _ 
@@ -70,13 +70,13 @@ time.sleep(1)
 # |_____\___|\__,_|
 #                               
 
-fp.setPowerLed(LedColor.red)
+fp.set_power_led(LedColor.red)
 time.sleep(1)
-fp.setPowerLed(LedColor.green)
+fp.set_power_led(LedColor.green)
 time.sleep(1)
-fp.setPowerLed(LedColor.orange)
+fp.set_power_led(LedColor.orange)
 time.sleep(1)
-fp.setPowerLed(LedColor.off)
+fp.set_power_led(LedColor.off)
 time.sleep(1)
 
 #'VA' => All, only 'O' works after

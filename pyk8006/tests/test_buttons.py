@@ -11,13 +11,18 @@ from k8006 import K8006
 irq = 22
 fp = K8006()
 
-def int_to_chr(int):
-    return chr(int).decode('latin-1')
+def int_to_chr(i):
+    if(i == 0xaa):
+        return '0xaa'
+    else:
+        return chr(i)
 
 def read_inputs(pin):
     #print "IRQ on:" + str(pin)
     data = fp.readButtons()
     print(str(''.join([int_to_chr(i) for i in data])))
+    input = GPIO.input(irq)
+    if input != 1: read_inputs(None)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(irq,GPIO.IN)
