@@ -5,10 +5,10 @@ import time
 from RPi import GPIO
 
 sys.path.append('../')
-from kmm import K8006
+from kmm import *
 
 irq = 22
-fp = K8006(async=False,debug=True)
+fp = Kmm(async=False,debug=True)
 
 def int_to_chr(i):
     if(i == 0xaa):

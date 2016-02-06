@@ -5,10 +5,9 @@ import time
 from datetime import datetime
 
 sys.path.append("../")
-from kmm import K8006
-from kmm import LedColor
+from kmm import *
 
-fp = K8006(async=True)
+fp = Kmm(async=True)
 fp.clear()
 
 #  _____         _
