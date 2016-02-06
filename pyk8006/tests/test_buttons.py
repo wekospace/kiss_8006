@@ -8,7 +8,7 @@ sys.path.append('../')
 from k8006 import K8006
 
 irq = 22
-fp = K8006()
+fp = K8006(async=False,debug=True)
 
 def int_to_chr(i):
     if(i == 0xaa):
@@ -17,10 +17,12 @@ def int_to_chr(i):
         return chr(i)
 
 def read_inputs(pin):
-    #print "IRQ on:" + str(pin)
-    data = fp.readButtons()
-    print(str(''.join([int_to_chr(i) for i in data])))
+    print("IRQ on:" + str(pin))
+    data = fp.receive_raw_payload()
+    if not(data == None):
+        print(str(''.join([int_to_chr(i) for i in data])))
     input = GPIO.input(irq)
+    print("input: "+str(input))
     if input != 1: read_inputs(None)
 
 GPIO.setmode(GPIO.BOARD)
