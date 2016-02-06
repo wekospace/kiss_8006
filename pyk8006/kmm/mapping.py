@@ -30,7 +30,7 @@ dictionnary = {
   'Ir156993': 'video',
   'Ir156974': 'information',
   'Ir156977': 'swap',
-  'Ir156978': 'fr_bande',
+  'Ir156978': 'voicemail',
   'Ir156981': 'stop',
   'Ir156982': 'play',
   'Ir156985': 'record',
