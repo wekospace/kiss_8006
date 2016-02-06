@@ -19,11 +19,6 @@ from .low_level import *
 # VSc => Clock
 # VSt => Track
 
-from enum import Enum
-class LedColor(Enum):
-    (off, red, orange, green) = range(4)
-
-
 class Kmm():
     def __init__(self, async=False, debug=False):
         self.__async = async
@@ -125,4 +120,9 @@ class Kmm():
 
     def __del__(self):
         if self.__async: self.__io.terminate()
+
+
+from enum import Enum
+class LedColor(Enum):
+    (off, red, orange, green) = range(4)
 
