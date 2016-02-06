@@ -1,8 +1,8 @@
 #/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import spidev
 import time
+
 def text_to_bytearray(text):
     return text.encode('iso8859-1', errors='replace')
 
