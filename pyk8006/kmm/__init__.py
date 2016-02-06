@@ -4,6 +4,8 @@ __all__ = [ 'Kmm', 'LedColor' ]
 
 from .low_level import *
 
+from . import mapping
+
 # #06VN1 -> 0x4e => ZZZ
 # #06VA1 => All ON (Crash)
 #send([ord('V'), ord('A'), 0x31])
@@ -117,6 +119,22 @@ class Kmm():
                 return None
             else:
                 return payload[3:]
+
+    def register_input_button_callback(self, function):
+        if not self.__async:
+            raise NameError("Can only register a callback when using " + str(__name__) + " in async mode")
+        self.__io.register_frame_received_callback(self.__frame_received)
+        self.__input_button_callback = function
+
+    def request_reception(self):
+        if not self.__async:
+            raise NameError("Can only request reception when using " + str(__name__) + " in async mode")
+        self.__io.request_reception()
+
+    def __frame_received(self, frame):
+        if(self.__input_button_callback != None):
+            payload = bytes(frame[3:]).decode()
+            self.__input_button_callback(mapping.payload_to_code(payload))
 
     def __del__(self):
         if self.__async: self.__io.terminate()

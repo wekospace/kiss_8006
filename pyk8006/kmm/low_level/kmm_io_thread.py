@@ -17,6 +17,7 @@ class KmmIoThread(threading.Thread):
         self.__waiting_for_rx = threading.Event()
         threading.Thread.__init__(self)
         self.__lv = KmmIo(self.__debug)
+        self.__frame_received_callback = None
 
     def kill(self):
         self.__kill = True
@@ -38,8 +39,9 @@ class KmmIoThread(threading.Thread):
                 self.receive(3)
                 self.__waiting_for_rx.clear()
 
- #           while not self.__rx.empty():
- #               print("<-- " + str(self.__rx.get()) + " " + str(self.__rx_remaining_bytes))
+            if self.__frame_received_callback != None:
+                while not self.__rx.empty():
+                    self.__frame_received_callback(self.__rx.get())
 
             if self.__tx.empty() and self.__rx_remaining_bytes == 0:
                 self.__something_to_process.clear()
@@ -83,8 +85,7 @@ class KmmIoThread(threading.Thread):
         self.__something_to_process.set()
 
     def get_rx(self):
-        self.__waiting_for_rx.set()
-        self.__something_to_process.set()
+        self.request_reception()
         data = None
         try:
             data = self.__rx.get(timeout=1)
@@ -92,6 +93,13 @@ class KmmIoThread(threading.Thread):
         except Empty:
             pass
         return data
+
+    def register_frame_received_callback(self, function):
+        self.__frame_received_callback = function
+
+    def request_reception(self):
+        self.__waiting_for_rx.set()
+        self.__something_to_process.set()
 
     def terminate(self):
         print("I'm HERE")

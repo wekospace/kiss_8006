@@ -8,7 +8,7 @@ sys.path.append('../')
 from kmm import *
 
 irq = 22
-fp = Kmm(async=False,debug=True)
+fp = Kmm(async=True,debug=True)
 
 def int_to_chr(i):
     if(i == 0xaa):
@@ -18,9 +18,11 @@ def int_to_chr(i):
 
 def read_inputs(pin):
     print("IRQ on:" + str(pin))
-    data = fp.receive_raw_payload()
-    if not(data == None):
-        print(str(''.join([int_to_chr(i) for i in data])))
+    fp.request_reception()
+
+def button_received(button):
+    print(button)
+    fp.set_text(str(button))
     input = GPIO.input(irq)
     print("input: "+str(input))
     if input != 1: read_inputs(None)
@@ -28,6 +30,8 @@ def read_inputs(pin):
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(irq,GPIO.IN)
 GPIO.add_event_detect(irq, GPIO.FALLING, callback=read_inputs)
+
+fp.register_input_button_callback(button_received)
 
 while(GPIO.input(irq) == 0):
     read_inputs("Zzz")
