@@ -5,7 +5,7 @@ import time
 from RPi import GPIO
 
 sys.path.append('../')
-from k8006 import K8006
+from kmm import K8006
 
 irq = 22
 fp = K8006(async=False,debug=True)
