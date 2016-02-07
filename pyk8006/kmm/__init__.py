@@ -120,16 +120,16 @@ class Kmm():
             else:
                 return payload[3:]
 
+    def request_reception(self):
+        if not self.__async:
+            raise NameError("Can only request reception when using " + str(__name__) + " in async mode")
+        self.__io.request_reception()
+
     def register_input_button_callback(self, function):
         if not self.__async:
             raise NameError("Can only register a callback when using " + str(__name__) + " in async mode")
         self.__io.register_frame_received_callback(self.__frame_received)
         self.__input_button_callback = function
-
-    def request_reception(self):
-        if not self.__async:
-            raise NameError("Can only request reception when using " + str(__name__) + " in async mode")
-        self.__io.request_reception()
 
     def __frame_received(self, frame):
         if(self.__input_button_callback != None):
