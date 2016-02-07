@@ -30,4 +30,4 @@ while True:
     time.sleep(1)
     #print "I'm alive !"
     input = fp.read_irq_pin()
-    if input != 1: print("Error: IRQ pin value is " + str(GPIO.input(irq)))
+    if input != 1: print("Error: IRQ pin value is " + str(input))
