@@ -19,7 +19,8 @@ def int_to_chr(i):
 
 def button_received(button):
     print(button)
-    fp.set_text(str(button))
+    text = "X" * int(button.duration*7)
+    fp.set_text(text)
     fp.check_irq_pin()
 
 fp.register_input_button_callback(button_received)

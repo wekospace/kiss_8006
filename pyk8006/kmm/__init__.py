@@ -137,7 +137,7 @@ class Kmm():
             payload = bytes(frame[3:]).decode()
             kie = self.__kied.decode(payload)
             if kie != None:
-                print(str(kie))
+                self.__input_button_callback(kie)
 
     def __del__(self):
         if self.__async: self.__io.terminate()
