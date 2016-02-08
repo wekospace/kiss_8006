@@ -6,7 +6,7 @@ from RPi import GPIO
 
 class KmmPi(Kmm):
     def __init__(self, irq_pin, debug=False):
-        Kmm.__init__(self, async=True, debug=False)
+        Kmm.__init__(self, async=True, debug=debug)
         self.__irq_pin = irq_pin
 
         def irq_pin_trigged(pin):
