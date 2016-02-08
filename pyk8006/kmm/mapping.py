@@ -53,3 +53,21 @@ def ir_code_to_key(ir_code):
     except KeyError:
         key = None
     return key
+
+button_code_to_key_dict = {
+    '01': 'menu',
+    '02': 'right',
+    '03': 'down',
+    '04': 'up',
+    '05': 'ok',
+    '06': 'left',
+    '07': 'back',
+    '08': 'power',
+}
+
+def button_code_to_key(button_code):
+    try:
+        key = button_code_to_key_dict[button_code]
+    except KeyError:
+        key = None
+    return key

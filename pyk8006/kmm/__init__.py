@@ -174,6 +174,8 @@ class KmmInputEventDecoder:
         self.__ir_input__last_pressed = None
         self.__ir_input__last_transmitted = None
         self.__ir_input__timer = RepeatableTimer(0.12, self.__ir_input_released)
+        self.__button_input__last_pressed = None
+        self.__button_input__timer = RepeatableTimer(repeat_delta+0.1, self.__button_input_hold)
         self.__repeat_delta = repeat_delta
 
     def decode(self, payload):
@@ -220,8 +222,28 @@ class KmmInputEventDecoder:
         self.__ir_input__last_received = ir_input
         return kie
 
+    def __button_input_hold(self):
+        timestamp = datetime.datetime.now()
+        duration = (timestamp-self.__button_input__last_pressed[1]).total_seconds()
+        kie = KmmInputEvent(self.__button_input__last_pressed[0], InputEventType.hold, timestamp, duration)
+        self.__kmm._Kmm__input_button_callback(kie)
+        self.__button_input__timer.start()
+
     def __decode_button(self, button_code):
-        raise NamedError('Implement me!')
+        kie = None
+        button_key = mapping.button_code_to_key(button_code[1:])
+        timestamp = datetime.datetime.now()
+        if button_code[0] == '1':
+            self.__button_input__last_pressed = (button_key, timestamp)
+            self.__button_input__timer.start()
+            iet = InputEventType.pressed
+        else:
+            self.__button_input__timer.cancel()
+            iet = InputEventType.released
+
+        if button_key != None:
+            kie = KmmInputEvent(button_key, iet, timestamp)
+        return kie
 
 class KmmInputEvent:
     def __init__(self, key, type, timestamp, duration=0.0):
