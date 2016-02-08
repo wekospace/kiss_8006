@@ -6,6 +6,8 @@ from .low_level import *
 
 from . import mapping
 
+from threading import Timer
+
 # #06VN1 -> 0x4e => ZZZ
 # #06VA1 => All ON (Crash)
 #send([ord('V'), ord('A'), 0x31])
@@ -31,7 +33,7 @@ class Kmm():
             self.__io = kmm_io_thread.KmmIoThread(debug)
             self.__io.start()
             self.__send_raw_data = self.__io.put_tx
-            self.__kied = KmmInputEventDecoder(0.12)
+            self.__kied = KmmInputEventDecoder(self, 0.1)
 
     def send_raw_payload(self, payload):
         header = [0x23, 0x00, 0x00]
@@ -136,8 +138,6 @@ class Kmm():
         if(self.__input_button_callback != None):
             payload = bytes(frame[3:]).decode()
             kie = self.__kied.decode(payload)
-            if kie != None:
-                self.__input_button_callback(kie)
 
     def __del__(self):
         if self.__async: self.__io.terminate()
@@ -152,44 +152,72 @@ class InputEventType(Enum):
 
 import datetime
 
+class RepeatableTimer(object):
+    def __init__(self, interval, function, args=[], kwargs={}):
+        self._interval = interval
+        self._function = function
+        self._args = args
+        self._kwargs = kwargs
+        self.__t = None
+
+    def start(self):
+        self.__t = Timer(self._interval, self._function, *self._args, **self._kwargs)
+        self.__t.start()
+
+    def cancel(self):
+        if self.__t != None: self.__t.cancel()
+
 class KmmInputEventDecoder:
-    def __init__(self, repeat_delta):
-        self.__last_received_ir_input = None
-        self.__last_pressed_ir_input = None
-        self.__last_transmitted_ir_input = None
+    def __init__(self, kmm, repeat_delta):
+        self.__kmm = kmm
+        self.__ir_input__last_received = None
+        self.__ir_input__last_pressed = None
+        self.__ir_input__last_transmitted = None
+        self.__ir_input__timer = RepeatableTimer(0.12, self.__ir_input_released)
         self.__repeat_delta = repeat_delta
 
     def decode(self, payload):
+        kie = None
         if(payload[0:2] == 'Ir'):
-            return self.__decode_ir(payload[2:])
+            kie = self.__decode_ir(payload[2:])
         elif(payload[0:1] == 'B'):
-            return self.__decode_button(payload[1:])
+            kie = self.__decode_button(payload[1:])
         else:
-            raise NamedError('Unknown reply type')
+            raise NameError('Unknown reply type')
+        if kie != None:
+            self.__kmm._Kmm__input_button_callback(kie)
+
+    def __ir_input_released(self):
+        ir_key = mapping.ir_code_to_key(self.__ir_input__last_transmitted[0])
+        kie = KmmInputEvent(ir_key, InputEventType.released, datetime.datetime.now())
+        self.__kmm._Kmm__input_button_callback(kie)
 
     def __decode_ir(self, ir_code):
         kie = None
         ir_input = (ir_code, datetime.datetime.now())
         ir_key = mapping.ir_code_to_key(ir_code)
+        self.__ir_input__timer.cancel()
 
-        if self.__last_received_ir_input == None or self.__last_received_ir_input[0] != ir_input[0]:
-            self.__last_pressed_ir_input = ir_input
-            self.__last_transmitted_ir_input = ir_input
+        if self.__ir_input__last_received == None or self.__ir_input__last_received[0] != ir_input[0]:
+            self.__ir_input__last_pressed = ir_input
+            self.__ir_input__last_transmitted = ir_input
+            self.__ir_input__timer.start()
             kie = KmmInputEvent(ir_key, InputEventType.pressed, ir_input[1])
         else:
-            delta = (ir_input[1]-self.__last_received_ir_input[1]).total_seconds()
+            delta = (ir_input[1]-self.__ir_input__last_received[1]).total_seconds()
             if delta > 0.12: # Key have been released then pressed again
-                self.__last_pressed_ir_input = ir_input
-                self.__last_transmitted_ir_input = ir_input
+                self.__ir_input__last_pressed = ir_input
+                self.__ir_input__last_transmitted = ir_input
                 kie = KmmInputEvent(ir_key, InputEventType.pressed, ir_input[1])
             else:
-                repeat_delta = (ir_input[1]-self.__last_transmitted_ir_input[1]).total_seconds()
+                repeat_delta = (ir_input[1]-self.__ir_input__last_transmitted[1]).total_seconds()
+                self.__ir_input__timer.start()
                 if repeat_delta > self.__repeat_delta:
-                    duration = (ir_input[1]-self.__last_pressed_ir_input[1]).total_seconds()
-                    self.__last_transmitted_ir_input = ir_input
+                    duration = (ir_input[1]-self.__ir_input__last_pressed[1]).total_seconds()
+                    self.__ir_input__last_transmitted = ir_input
                     kie = KmmInputEvent(ir_key, InputEventType.hold, ir_input[1], duration)
 
-        self.__last_received_ir_input = ir_input
+        self.__ir_input__last_received = ir_input
         return kie
 
     def __decode_button(self, button_code):

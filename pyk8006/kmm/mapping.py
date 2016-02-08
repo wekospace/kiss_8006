@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-dictionnary = {
+ir_code_to_key_dict = {
   '156950': 'power',
   '156930': 'one',
   '156933': 'two',
@@ -49,7 +49,7 @@ dictionnary = {
 
 def ir_code_to_key(ir_code):
     try:
-        key = dictionnary[ir_code]
+        key = ir_code_to_key_dict[ir_code]
     except KeyError:
         key = None
     return key
