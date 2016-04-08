@@ -1,33 +1,4 @@
 EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
 LIBS:TSOP38238
 LIBS:ci_vfd-cache
 EELAYER 25 0
@@ -395,9 +366,9 @@ $EndComp
 Text Label 3800 4550 3    60   ~ 0
 AVCC
 Text Label 4050 5200 2    60   ~ 0
-AT26
+REQ
 Text Label 3150 1900 2    60   ~ 0
-AT26
+REQ
 Text Label 3500 7600 1    60   ~ 0
 Green
 $Comp
@@ -578,7 +549,7 @@ $EndComp
 Text Label 5900 1700 0    60   ~ 0
 KM2
 Text Label 1850 7050 2    60   ~ 0
-AT16
+MISO
 Text Label 5900 1800 0    60   ~ 0
 KM3
 $Comp
@@ -663,7 +634,7 @@ F 3 "" H 2000 6200 30  0000 C CNN
 	0    1    1    0   
 $EndComp
 Text Label 2400 6200 2    60   ~ 0
-AT15
+MOSI
 Text Label 3300 7600 1    60   ~ 0
 Orange
 Text Label 5900 1900 0    60   ~ 0
@@ -754,7 +725,7 @@ F 3 "" H 2000 5050 30  0000 C CNN
 	0    1    1    0   
 $EndComp
 Text Label 2400 5050 2    60   ~ 0
-AT17
+SCK
 $Comp
 L R R2
 U 1 1 565A8762
@@ -837,7 +808,7 @@ F 3 "" H 2000 3900 30  0000 C CNN
 	0    1    1    0   
 $EndComp
 Text Label 2400 3900 2    60   ~ 0
-AT14
+/SS
 Text Label 3100 7600 1    60   ~ 0
 Brown
 Text Label 5900 2650 0    60   ~ 0
@@ -854,13 +825,13 @@ F 3 "" H 3000 7550 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 3150 1250 2    60   ~ 0
-AT17
+SCK
 Text Label 3150 1150 2    60   ~ 0
-AT16
+MISO
 Text Label 3150 1050 2    60   ~ 0
-AT15
+MOSI
 Text Label 3150 950  2    60   ~ 0
-AT14
+/SS
 $Comp
 L TSOP38238 U3
 U 1 1 565AA5C3
@@ -1617,19 +1588,19 @@ NoConn ~ 7600 4250
 Wire Wire Line
 	7500 4250 7500 4600
 Text Label 7500 4600 1    60   ~ 0
-AT14
+/SS
 Wire Wire Line
 	7300 3750 7300 3400
 Text Label 7300 3400 3    60   ~ 0
-AT15
+MOSI
 Wire Wire Line
 	7200 4250 7200 4600
 Text Label 7200 4600 1    60   ~ 0
-AT16
+MISO
 Wire Wire Line
 	7300 4250 7300 4600
 Text Label 7300 4600 1    60   ~ 0
-AT17
+SCK
 Wire Wire Line
 	7400 4250 7400 4600
 Text Label 7400 4600 1    60   ~ 0
