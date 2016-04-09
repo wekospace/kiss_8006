@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/plop/Projets/kiss_8006/pikmm/pikmm.sch</source>
+    <date>ven. 08 avril 2016 22:38:16 CEST</date>
+    <tool>Eeschema 4.0.2-4+6225~38~ubuntu14.04.1-stable</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>pikmm.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="P1">
+      <value>CONN_01X11</value>
+      <footprint>Connectors_Molex:Molex_PicoBlade_53047-1110</footprint>
+      <libsource lib="conn" part="CONN_01X11"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5707E9B7</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>LevelConverter</value>
+      <footprint>DIP12_W5:DIP12_W5</footprint>
+      <libsource lib="levelconverters" part="LevelConverter"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5707FDA7</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>LevelConverter</value>
+      <footprint>DIP12_W5:DIP12_W5</footprint>
+      <libsource lib="levelconverters" part="LevelConverter"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5707FE09</tstamp>
+    </comp>
+    <comp ref="PI1">
+      <value>BPLUS_GPIO</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_1x20</footprint>
+      <libsource lib="raspberry_pi" part="BPLUS_GPIO"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>570802D8</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="raspberry_pi" part="BPLUS_GPIO">
+      <fields>
+        <field name="Reference">PI</field>
+        <field name="Value">BPLUS_GPIO</field>
+      </fields>
+      <pins>
+        <pin num="1" name="3V3" type="power_out"/>
+        <pin num="2" name="5V" type="power_out"/>
+        <pin num="3" name="GPIO2_SDA" type="BiDi"/>
+        <pin num="4" name="5V" type="power_out"/>
+        <pin num="5" name="GPIO3_SCL" type="BiDi"/>
+        <pin num="6" name="GND" type="passive"/>
+        <pin num="7" name="GPIO4" type="BiDi"/>
+        <pin num="8" name="GPIO14_TX" type="BiDi"/>
+        <pin num="9" name="GND" type="passive"/>
+        <pin num="10" name="GPIO15_RX" type="BiDi"/>
+        <pin num="11" name="GPIO17" type="BiDi"/>
+        <pin num="12" name="GPIO18" type="BiDi"/>
+        <pin num="13" name="GPIO27" type="BiDi"/>
+        <pin num="14" name="GND" type="passive"/>
+        <pin num="15" name="GPIO22" type="BiDi"/>
+        <pin num="16" name="GPIO23" type="BiDi"/>
+        <pin num="17" name="3V3" type="power_out"/>
+        <pin num="18" name="GPIO24" type="BiDi"/>
+        <pin num="19" name="GPIO10_MOSI" type="passive"/>
+        <pin num="20" name="GND" type="passive"/>
+        <pin num="21" name="GPIO9_MISO" type="passive"/>
+        <pin num="22" name="GPIO25" type="BiDi"/>
+        <pin num="23" name="GPIO11_SCLK" type="BiDi"/>
+        <pin num="24" name="GPIO8_CE0" type="BiDi"/>
+        <pin num="25" name="GND" type="passive"/>
+        <pin num="26" name="GPIO7_CE1" type="BiDi"/>
+        <pin num="27" name="ID_SD" type="BiDi"/>
+        <pin num="28" name="ID_SC" type="BiDi"/>
+        <pin num="29" name="GPIO5" type="BiDi"/>
+        <pin num="30" name="GND" type="power_out"/>
+        <pin num="31" name="GPIO6" type="BiDi"/>
+        <pin num="32" name="GPIO12" type="BiDi"/>
+        <pin num="33" name="GPIO13" type="BiDi"/>
+        <pin num="34" name="GND" type="passive"/>
+        <pin num="35" name="GPIO19" type="BiDi"/>
+        <pin num="36" name="GPIO16" type="BiDi"/>
+        <pin num="37" name="GPIO26" type="BiDi"/>
+        <pin num="38" name="GPIO20" type="BiDi"/>
+        <pin num="39" name="GND" type="passive"/>
+        <pin num="40" name="GPIO21" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X11">
+      <description>Connector 01x11</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X11</fp>
+        <fp>Pin_Header_Angled_1X11</fp>
+        <fp>Socket_Strip_Straight_1X11</fp>
+        <fp>Socket_Strip_Angled_1X11</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X11</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+        <pin num="7" name="P7" type="passive"/>
+        <pin num="8" name="P8" type="passive"/>
+        <pin num="9" name="P9" type="passive"/>
+        <pin num="10" name="P10" type="passive"/>
+        <pin num="11" name="P11" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="levelconverters" part="LevelConverter">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LevelConverter</field>
+      </fields>
+      <pins>
+        <pin num="1" name="LV1" type="BiDi"/>
+        <pin num="2" name="LV2" type="BiDi"/>
+        <pin num="3" name="LV" type="input"/>
+        <pin num="4" name="GND" type="input"/>
+        <pin num="5" name="LV3" type="BiDi"/>
+        <pin num="6" name="LV4" type="BiDi"/>
+        <pin num="7" name="HV4" type="BiDi"/>
+        <pin num="8" name="HV3" type="BiDi"/>
+        <pin num="9" name="GND" type="input"/>
+        <pin num="10" name="HV" type="input"/>
+        <pin num="11" name="HV2" type="BiDi"/>
+        <pin num="12" name="HV1" type="BiDi"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="conn">
+      <uri>/usr/share/kicad/library/conn.lib</uri>
+    </library>
+    <library logical="levelconverters">
+      <uri>/home/plop/Projets/kiss_8006/pikmm/levelconverters.lib</uri>
+    </library>
+    <library logical="raspberry_pi">
+      <uri>/home/plop/Projets/kiss_8006/pikmm/rpi_lib/raspberry_pi.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="+5V">
+      <node ref="U1" pin="10"/>
+      <node ref="U2" pin="10"/>
+      <node ref="PI1" pin="2"/>
+    </net>
+    <net code="2" name="+3V3">
+      <node ref="U2" pin="3"/>
+      <node ref="PI1" pin="1"/>
+      <node ref="U1" pin="3"/>
+    </net>
+    <net code="3" name="Net-(PI1-Pad24)">
+      <node ref="PI1" pin="24"/>
+      <node ref="U2" pin="6"/>
+    </net>
+    <net code="4" name="Net-(PI1-Pad22)">
+      <node ref="U1" pin="5"/>
+      <node ref="PI1" pin="22"/>
+    </net>
+    <net code="5" name="Net-(PI1-Pad23)">
+      <node ref="U2" pin="5"/>
+      <node ref="PI1" pin="23"/>
+    </net>
+    <net code="6" name="Net-(PI1-Pad21)">
+      <node ref="PI1" pin="21"/>
+      <node ref="U2" pin="1"/>
+    </net>
+    <net code="7" name="Net-(PI1-Pad19)">
+      <node ref="U2" pin="2"/>
+      <node ref="PI1" pin="19"/>
+    </net>
+    <net code="8" name="Net-(PI1-Pad38)">
+      <node ref="PI1" pin="38"/>
+      <node ref="U1" pin="2"/>
+    </net>
+    <net code="9" name="Net-(PI1-Pad40)">
+      <node ref="PI1" pin="40"/>
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="10" name="Net-(PI1-Pad33)">
+      <node ref="PI1" pin="33"/>
+    </net>
+    <net code="11" name="Net-(PI1-Pad36)">
+      <node ref="PI1" pin="36"/>
+      <node ref="U1" pin="1"/>
+    </net>
+    <net code="12" name="Net-(PI1-Pad8)">
+      <node ref="PI1" pin="8"/>
+    </net>
+    <net code="13" name="Net-(PI1-Pad10)">
+      <node ref="PI1" pin="10"/>
+    </net>
+    <net code="14" name="Net-(PI1-Pad12)">
+      <node ref="PI1" pin="12"/>
+    </net>
+    <net code="15" name="Net-(PI1-Pad16)">
+      <node ref="PI1" pin="16"/>
+    </net>
+    <net code="16" name="Net-(PI1-Pad18)">
+      <node ref="PI1" pin="18"/>
+    </net>
+    <net code="17" name="Net-(PI1-Pad26)">
+      <node ref="PI1" pin="26"/>
+    </net>
+    <net code="18" name="Net-(PI1-Pad28)">
+      <node ref="PI1" pin="28"/>
+    </net>
+    <net code="19" name="Net-(PI1-Pad32)">
+      <node ref="PI1" pin="32"/>
+    </net>
+    <net code="20" name="Net-(PI1-Pad27)">
+      <node ref="PI1" pin="27"/>
+    </net>
+    <net code="21" name="Net-(PI1-Pad29)">
+      <node ref="PI1" pin="29"/>
+    </net>
+    <net code="22" name="Net-(PI1-Pad31)">
+      <node ref="PI1" pin="31"/>
+    </net>
+    <net code="23" name="Net-(PI1-Pad35)">
+      <node ref="PI1" pin="35"/>
+    </net>
+    <net code="24" name="Net-(PI1-Pad37)">
+      <node ref="PI1" pin="37"/>
+    </net>
+    <net code="25" name="Net-(PI1-Pad15)">
+      <node ref="PI1" pin="15"/>
+    </net>
+    <net code="26" name="Net-(PI1-Pad13)">
+      <node ref="PI1" pin="13"/>
+    </net>
+    <net code="27" name="Net-(PI1-Pad11)">
+      <node ref="PI1" pin="11"/>
+    </net>
+    <net code="28" name="Net-(PI1-Pad7)">
+      <node ref="PI1" pin="7"/>
+    </net>
+    <net code="29" name="Net-(PI1-Pad5)">
+      <node ref="PI1" pin="5"/>
+    </net>
+    <net code="30" name="Net-(PI1-Pad3)">
+      <node ref="PI1" pin="3"/>
+    </net>
+    <net code="31" name="Net-(PI1-Pad17)">
+      <node ref="PI1" pin="17"/>
+    </net>
+    <net code="32" name="Net-(PI1-Pad4)">
+      <node ref="PI1" pin="4"/>
+    </net>
+    <net code="33" name="GND">
+      <node ref="PI1" pin="25"/>
+      <node ref="PI1" pin="34"/>
+      <node ref="P1" pin="11"/>
+      <node ref="PI1" pin="14"/>
+      <node ref="PI1" pin="39"/>
+      <node ref="PI1" pin="30"/>
+      <node ref="PI1" pin="6"/>
+      <node ref="PI1" pin="9"/>
+      <node ref="P1" pin="1"/>
+      <node ref="PI1" pin="20"/>
+      <node ref="U1" pin="4"/>
+      <node ref="U2" pin="9"/>
+      <node ref="U2" pin="4"/>
+      <node ref="U1" pin="9"/>
+    </net>
+    <net code="34" name="/Yellow">
+      <node ref="U2" pin="12"/>
+      <node ref="P1" pin="7"/>
+    </net>
+    <net code="35" name="/Brown">
+      <node ref="U2" pin="7"/>
+      <node ref="P1" pin="10"/>
+    </net>
+    <net code="36" name="/Red">
+      <node ref="P1" pin="9"/>
+      <node ref="U2" pin="8"/>
+    </net>
+    <net code="37" name="/Orange">
+      <node ref="P1" pin="8"/>
+      <node ref="U2" pin="11"/>
+    </net>
+    <net code="38" name="/Green">
+      <node ref="P1" pin="6"/>
+      <node ref="U1" pin="7"/>
+    </net>
+    <net code="39" name="/Blue">
+      <node ref="U1" pin="8"/>
+      <node ref="P1" pin="5"/>
+    </net>
+    <net code="40" name="/Purple">
+      <node ref="P1" pin="4"/>
+      <node ref="U1" pin="11"/>
+    </net>
+    <net code="41" name="/Grey">
+      <node ref="P1" pin="3"/>
+    </net>
+    <net code="42" name="/White">
+      <node ref="P1" pin="2"/>
+      <node ref="U1" pin="12"/>
+    </net>
+  </nets>
+</export>
