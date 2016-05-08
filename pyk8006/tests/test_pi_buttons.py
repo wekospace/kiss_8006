@@ -9,7 +9,7 @@ from kmm.pi import KmmPi
 
 debug=False
 
-fp = KmmPi(irq_pin=22,debug=debug)
+fp = KmmPi(irq_pin=37,debug=debug)
 
 def int_to_chr(i):
     if(i == 0xaa):
