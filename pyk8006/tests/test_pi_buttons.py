@@ -17,7 +17,10 @@ def int_to_chr(i):
     else:
         return chr(i)
 
+failure_counter = 0
+
 def button_received(button):
+    failure_counter = 0
     print(button)
     text = "X" * int(button.duration*7)
     fp.set_text(text)
@@ -29,6 +32,10 @@ fp.set_text('Hit a key')
 
 while True:
     time.sleep(1)
-    #print "I'm alive !"
     input = fp.read_irq_pin()
-    if input != 1: print("Error: IRQ pin value is " + str(input))
+    if input != 1:
+        failure_counter += 1
+        print("Error: IRQ pin value is " + str(input) + ' (' + str(failure_counter) + ')')
+        if failure_counter >= 3:
+            print('Forcing pin read...')
+            fp.check_irq_pin()
