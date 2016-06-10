@@ -237,8 +237,8 @@ class Packet:
         payload = self.payload[ (packetnum-1) * MAX_PAYLOAD_SIZE :
                                 (packetnum-1) * MAX_PAYLOAD_SIZE+
                                 self.get_payload_size(packetnum) ]
-        print(str(type(header)))
-        print(str(type(payload)))
+        #print(str(type(header)))
+        #print(str(type(payload)))
         return header + payload
 
     def send(self, sock, addr, uid=UNIQUE_IDENTIFICATION):
