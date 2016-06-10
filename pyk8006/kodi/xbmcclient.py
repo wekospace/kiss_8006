@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/usr/bin/python3
 
 #   Copyright (C) 2008-2013 Team XBMC
 #
@@ -147,7 +146,7 @@ class Packet:
         self.payloadsize = 0
         self.uid = UNIQUE_IDENTIFICATION
         self.reserved = "\0" * 10
-        self.payload = ""
+        self.payload = bytes()
         return
 
 
@@ -157,6 +156,7 @@ class Packet:
         Arguments:
         blob -- binary data to append to the current payload
         """
+        #print(str(type(self.payload)) + ": " + str(self.payload) + " " + str(type(blob)) + ": " + str(blob))
         self.set_payload(self.payload + blob)
 
 
@@ -190,15 +190,15 @@ class Packet:
         """
         if packettype < 0:
             packettype = self.packettype
-        header = self.sig
-        header += chr(self.majver)
-        header += chr(self.minver)
+        header = bytes(self.sig, encoding='latin1')
+        header += bytes(self.majver)
+        header += bytes(self.minver)
         header += format_uint16(packettype)
         header += format_uint32(seq)
         header += format_uint32(maxseq)
         header += format_uint16(payload_size)
         header += format_uint32(self.uid)
-        header += self.reserved
+        header += bytes(self.reserved, encoding='latin1')
         return header
 
     def get_payload_size(self, seq):
@@ -237,6 +237,8 @@ class Packet:
         payload = self.payload[ (packetnum-1) * MAX_PAYLOAD_SIZE :
                                 (packetnum-1) * MAX_PAYLOAD_SIZE+
                                 self.get_payload_size(packetnum) ]
+        print(str(type(header)))
+        print(str(type(payload)))
         return header + payload
 
     def send(self, sock, addr, uid=UNIQUE_IDENTIFICATION):
@@ -273,8 +275,8 @@ class PacketHELO (Packet):
         Packet.__init__(self)
         self.packettype = PT_HELO
         self.icontype = icon_type
-        self.set_payload ( format_string(devicename)[0:128] )
-        self.append_payload( chr (icon_type) )
+        self.set_payload ( bytes(format_string(devicename)[0:128], encoding='latin1'))
+        self.append_payload( bytes (icon_type) )
         self.append_payload( format_uint16 (0) ) # port no
         self.append_payload( format_uint32 (0) ) # reserved1
         self.append_payload( format_uint32 (0) ) # reserved2
@@ -302,7 +304,7 @@ class PacketNOTIFICATION (Packet):
         self.message = message
         self.set_payload ( format_string(title) )
         self.append_payload( format_string(message) )
-        self.append_payload( chr (icon_type) )
+        self.append_payload( bytes (icon_type) )
         self.append_payload( format_uint32 (0) ) # reserved
         if icon_type != ICON_NONE and icon_file:
             self.append_payload( file(icon_file).read() )
@@ -396,7 +398,7 @@ class PacketMOUSE (Packet):
         Packet.__init__(self)
         self.packettype = PT_MOUSE
         self.flags = MS_ABSOLUTE
-        self.append_payload( chr (self.flags) )
+        self.append_payload( bytes (self.flags) )
         self.append_payload( format_uint16(x) )
         self.append_payload( format_uint16(y) )
 
@@ -435,10 +437,10 @@ class PacketLOG (Packet):
         """
         Packet.__init__(self)
         self.packettype = PT_LOG
-        self.append_payload( chr (loglevel) )
+        self.append_payload( bytes (loglevel) )
         self.append_payload( format_string(logmessage) )
         if (autoprint):
-          print logmessage
+          print(logmessage)
 
 class PacketACTION (Packet):
     """An ACTION packet
@@ -455,8 +457,8 @@ class PacketACTION (Packet):
         """
         Packet.__init__(self)
         self.packettype = PT_ACTION
-        self.append_payload( chr (actiontype) )
-        self.append_payload( format_string(actionmessage) )
+        self.append_payload( actiontype.to_bytes(1, 'little') )
+        self.append_payload( bytes(format_string(actionmessage), encoding='latin1') )
 
 ######################################################################
 # XBMC Client Class
