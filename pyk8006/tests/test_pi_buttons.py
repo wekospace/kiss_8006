@@ -12,12 +12,6 @@ debug=False
 
 fp = KmmPi(debug=debug)
 
-def int_to_chr(i):
-    if(i == 0xaa):
-        return '0xaa'
-    else:
-        return chr(i)
-
 failure_counter = 0
 
 def button_received(button):
