@@ -1,0 +1,5 @@
+[Unit]
+Description=KissMe Kodi remote
+
+[Service]
+ExecStart=/usr/local/bin/kodiremote.py

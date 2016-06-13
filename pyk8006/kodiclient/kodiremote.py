@@ -5,6 +5,7 @@
 
 import sys, os
 sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../'))
+sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../share/pyshared'))
 
 import time
 from kodi.xbmcclient import XBMCClient,ACTION_EXECBUILTIN,ACTION_BUTTON
