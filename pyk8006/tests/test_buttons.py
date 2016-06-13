@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-import sys
+import sys, os
 import time
 from RPi import GPIO
 
-sys.path.append('../')
+sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../'))
+
 from kmm import *
 
 debug=False

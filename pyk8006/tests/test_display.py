@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-import sys
+import sys, os
 import time
 from datetime import datetime
 
-sys.path.append("../")
+sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../'))
+
 from kmm import *
 
 fp = Kmm(async=True)
