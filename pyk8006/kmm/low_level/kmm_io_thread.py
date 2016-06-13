@@ -67,12 +67,24 @@ class KmmIoThread(threading.Thread):
                 self.__rx_remaining_bytes = rx_frame_len - len(self.__rx_current_buffer)
 
                 if self.__rx_remaining_bytes <= 0 and len(self.__rx_current_buffer):
-                    self.__rx.put(self.__rx_current_buffer[0:rx_frame_len])
-                    self.__rx_current_buffer = self.__rx_current_buffer[rx_frame_len:]
-                    self.process_rx_buffer()
-                    self.__rx_remaining_bytes = 0
+                    if self.__rx_current_buffer.count(0x23) != 1:
+                        print("Dropping frame : " + str(self.__rx_current_buffer))
+                        self.__rx_current_buffer.pop(0)
+                        self.drop_junk()
+                    else:
+                        self.__rx.put(self.__rx_current_buffer[0:rx_frame_len])
+                        self.__rx_current_buffer = self.__rx_current_buffer[rx_frame_len:]
+                        self.process_rx_buffer()
+                        self.__rx_remaining_bytes = 0
             else:
-                print("Failure : " + str(self.__rx_current_buffer[0]))
+                self.drop_junk()
+
+    def drop_junk(self):
+        while len(self.__rx_current_buffer) and (self.__rx_current_buffer[0] != 0x23):
+            print("Dropping byte : " + str(self.__rx_current_buffer[0]))
+            self.__rx_current_buffer.pop(0)
+        if len(self.__rx_current_buffer):
+            self.process_rx_buffer()
 
     def process_received_bytes(self, data):
         self.__rx_current_buffer += data
