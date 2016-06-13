@@ -10,20 +10,18 @@ import time
 from kodi.xbmcclient import XBMCClient,ACTION_EXECBUILTIN,ACTION_BUTTON
 
 from kmm.pi import KmmPi
-from kmm import InputEventType
+from kmm import LedColor,InputEventType
 
 from kodi.kmm_mapping import button_to_action
 
 def main():
-#    host = "localhost"
-#    port = 9777
-    
     # Create an XBMCClient object and connect
     xbmc = XBMCClient("KissMe remote")
     xbmc.connect()
 
     kmm = KmmPi()
     kmm.set_text('Kodi KMM')
+    kmm.set_power_led(LedColor.green)
 
     def button_received(button):
         print(str(button))
