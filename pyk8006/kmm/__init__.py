@@ -178,7 +178,7 @@ class KmmIrInput:
         self.__transmitted_timestamp = self.__pressed_timestamp
         self.__ir_key = mapping.ir_code_to_key(ir_code)
         if self.__ir_key == None:
-            print(ir_code)
+            print('BAD FRAME: ', ir_code)
             raise NameError('Unable to find key for this ir code: ', ir_code)
         else:
             self.__timer.start()

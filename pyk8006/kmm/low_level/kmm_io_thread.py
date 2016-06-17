@@ -81,7 +81,7 @@ class KmmIoThread(threading.Thread):
 
     def drop_junk(self):
         while len(self.__rx_current_buffer) and (self.__rx_current_buffer[0] != 0x23):
-            print("Dropping byte : " + str(self.__rx_current_buffer[0]))
+            print("Dropping byte : " + str(hex(self.__rx_current_buffer[0])))
             self.__rx_current_buffer.pop(0)
         if len(self.__rx_current_buffer):
             self.process_rx_buffer()
@@ -92,7 +92,7 @@ class KmmIoThread(threading.Thread):
         if self.__debug: print("(remaining: " + str(self.__rx_remaining_bytes) + ")")
 
     def put_tx(self, data):
-        if self.__debug: print("+++ " + str(data))
+        if self.__debug: print("+++ " + bytes(data).decode('iso8859-1'))
         self.__tx.put(data)
         self.__something_to_process.set()
 
