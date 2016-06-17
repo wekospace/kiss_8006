@@ -67,8 +67,8 @@ class KmmIoThread(threading.Thread):
                 self.__rx_remaining_bytes = rx_frame_len - len(self.__rx_current_buffer)
 
                 if self.__rx_remaining_bytes <= 0 and len(self.__rx_current_buffer):
-                    if self.__rx_current_buffer.count(0x23) != 1:
-                        print("Dropping frame : " + str(self.__rx_current_buffer))
+                    if self.__rx_current_buffer[0:rx_frame_len].count(0x23) != 1:
+                        print("Dropping frame : " + str([hex(i) for i in self.__rx_current_buffer]))
                         self.__rx_current_buffer.pop(0)
                         self.drop_junk()
                     else:
