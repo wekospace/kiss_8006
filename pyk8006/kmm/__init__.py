@@ -179,9 +179,11 @@ class KmmIrInput:
         self.__ir_key = mapping.ir_code_to_key(ir_code)
         if self.__ir_key == None:
             print(ir_code)
-        self.__timer.start()
-        self.__last_event_type = InputEventType.pressed
-        event_callback(KmmInputEvent(self.__ir_key, InputEventType.pressed, self.__pressed_timestamp))
+            raise NameError('Unable to find key for this ir code: ', ir_code)
+        else:
+            self.__timer.start()
+            self.__last_event_type = InputEventType.pressed
+            event_callback(KmmInputEvent(self.__ir_key, InputEventType.pressed, self.__pressed_timestamp))
 
     def release(self):
         if self.__last_event_type != InputEventType.released:
@@ -237,11 +239,17 @@ class KmmInputEventDecoder:
         if self.__ir_input__current != None:
             if self.__ir_input__current.ir_code != ir_code:
                 self.__ir_input__current.release()
-                self.__ir_input__current = KmmIrInput(ir_code, self.__repeat_delta, self.__kmm._Kmm__input_button_callback)
+                try:
+                    self.__ir_input__current = KmmIrInput(ir_code, self.__repeat_delta, self.__kmm._Kmm__input_button_callback)
+                except:
+                    self.__ir_input__current = None
             else:
                 self.__ir_input__current.trig()
         else:
-            self.__ir_input__current = KmmIrInput(ir_code, self.__repeat_delta, self.__kmm._Kmm__input_button_callback)
+            try:
+                self.__ir_input__current = KmmIrInput(ir_code, self.__repeat_delta, self.__kmm._Kmm__input_button_callback)
+            except:
+                self.__ir_input__current = None
 
     def __button_input_hold(self):
         timestamp = datetime.datetime.now()
