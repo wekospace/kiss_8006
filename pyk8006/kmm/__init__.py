@@ -136,8 +136,7 @@ class Kmm():
 
     def __frame_received(self, frame):
         if(self.__input_button_callback != None):
-            payload = bytes(frame[3:]).decode()
-            kie = self.__kied.decode(payload)
+            kie = self.__kied.decode(frame[3:])
 
     def __del__(self):
         if self.__async: self.__io.terminate()
@@ -219,20 +218,25 @@ class KmmInputEventDecoder:
     def __init__(self, kmm, repeat_delta):
         self.__kmm = kmm
         self.__ir_input__current = None
+        self.__button_code__last = None
         self.__button_input__last_pressed = None
         self.__button_input__timer = RepeatableTimer(repeat_delta+0.1, self.__button_input_hold)
         self.__repeat_delta = repeat_delta
 
-    def decode(self, payload):
-        kie = None
-        if(payload[0:2] == 'Ir'):
-            self.__decode_ir(payload[2:])
-        elif(payload[0:1] == 'B'):
-            kie = self.__decode_button(payload[1:])
-        else:
-            raise NameError('Unknown reply type')
-        if kie != None:
-            self.__kmm._Kmm__input_button_callback(kie)
+    def decode(self, frame):
+        try:
+            payload = bytes(frame).decode()
+            if(payload[0:2] == 'Ir'):
+                self.__decode_ir(payload[2:])
+            elif(payload[0:1] == 'B'):
+                self.__decode_button(payload[1:])
+            else:
+                raise NameError('Unknown reply type')
+        except:
+            # Release last button on error
+            if(self.__button_code__last):
+                self.__button_code__last[0] = '0'
+                self.__decode_button(self.__button_code__last)
 
     def __decode_ir(self, ir_code):
         kie = None
@@ -259,7 +263,6 @@ class KmmInputEventDecoder:
         self.__button_input__timer.start()
 
     def __decode_button(self, button_code):
-        kie = None
         button_key = mapping.button_code_to_key(button_code[1:])
         timestamp = datetime.datetime.now()
         if button_code[0] == '1':
@@ -272,7 +275,7 @@ class KmmInputEventDecoder:
 
         if button_key != None:
             kie = KmmInputEvent(button_key, iet, timestamp)
-        return kie
+            self.__kmm._Kmm__input_button_callback(kie)
 
 class KmmInputEvent:
     def __init__(self, key, type, timestamp, duration=0.0):
