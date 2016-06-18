@@ -110,6 +110,13 @@ class KissMPD():
         else:
             self.__client.play()
 
+    def play_pause(self):
+        self.play(True)
+
+    @handle_idle
+    def pause(self):
+        self.__client.pause()
+
     @handle_idle
     def previous(self):
         self.__client.previous()
