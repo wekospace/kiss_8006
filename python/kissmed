@@ -15,133 +15,136 @@ from enum import Enum
 class Mode(Enum):
     (init, standby, music, video, console) = range(5)
 
-fp = KmmPi(debug=True)
-rb = RelayBoard()
-kmpd = KissMPD(fp)
+class KissMe:
+    def __init__(self):
+        self.fp = KmmPi(debug=False)
+        self.rb = RelayBoard()
+        self.kmpd = KissMPD(self.fp)
+        self.mode = Mode.init
 
-kmode = Mode.init
+        self.kmpd.connect()
+        kiew = KmmInputEventWorker(self.fp, self.inputevent_received)
+        self.fp.clear()
+        self.fp.set_text('{:^12}'.format('KissMe'))
+        kiew.start()
 
-mode2relay = {
-    Mode.init: [
-    ],
-    Mode.standby: [
-        ('all', False)
-    ],
-    Mode.music: [
-        ('switch', True),
-        ('tv', False),
-    ],
-    Mode.video: [
-        ('switch', True),
-        ('tv', True),
-    ],
-}
+    mode2relay = {
+        Mode.init: [
+        ],
+        Mode.standby: [
+            ('all', False)
+        ],
+        Mode.music: [
+            ('switch', True),
+            ('tv', False),
+        ],
+        Mode.video: [
+            ('switch', True),
+            ('tv', True),
+        ],
+    }
 
-mode2text = {
-    Mode.standby: '-- ',
-    Mode.music: 'Musique',
-    Mode.video: 'Video',
-}
-def set_mode(mode):
-    global kmode
-    if(mode != kmode):
-        for state in mode2relay[mode]: 
-            rb.set(state[0], state[1])
+    mode2text = {
+        Mode.standby: '-- ',
+        Mode.music: 'Musique',
+        Mode.video: 'Video',
+    }
 
-        if(mode == Mode.music):
-            kmpd.play()
+    def set_mode(self, mode):
+        if(mode != self.mode):
+            for state in self.mode2relay[mode]:
+                self.rb.set(state[0], state[1])
+
+            if(mode == Mode.music):
+                self.kmpd.play()
+            else:
+                self.kmpd.pause()
+
+            if(mode == Mode.standby):
+                self.fp.set_power_led(LedColor.red)
+                self.fp.clear()
+            else:
+                self.fp.set_power_led(LedColor.green)
+                self.fp.set_flash_text(20, '{:^12}'.format(self.mode2text[mode]))
+
+            self.mode = mode
+            self.refresh_display()
+
+    def refresh_display(self):
+        if self.mode == Mode.music:
+            self.kmpd.refresh()
         else:
-            kmpd.pause()
+            self.fp.set_text('')
 
-        if(mode == Mode.standby):
-            fp.set_power_led(LedColor.red)
-            fp.clear()
+    key2mode = {
+        'red': Mode.music,
+        'green': Mode.video,
+        'power': Mode.standby,
+    }
+
+    def inputevent_received(self, ie):
+        key2function = {
+            'volume_down'    : self.kmpd.volume_down,
+            'volume_up'      : self.kmpd.volume_up,
+            'stop'           : self.kmpd.stop,
+            'play'           : self.kmpd.play_pause,
+            'next_track'     : self.kmpd.next,
+            'previous_track' : self.kmpd.previous,
+            'right'          : self.kmpd.next,
+            'left'           : self.kmpd.previous,
+            'down'           : self.kmpd.volume_down,
+            'up'             : self.kmpd.volume_up,
+            'ok'             : self.kmpd.play_pause,
+            'mute'           : self.kmpd.play_pause,
+        }
+
+        try:
+            mode = self.key2mode[ie.key]
+        except:
+            mode = None
+
+        if(ie.key == 'power') and (self.mode == Mode.standby) and (ie.type == InputEventType.pressed):
+            mode = Mode.music
+            self.set_mode(mode)
+            return
+
+        print(ie)
+        if(mode != None):
+            if(ie.type == InputEventType.pressed):
+                self.fp.set_scrolling_text(1, 99, self.mode2text[mode])
+            elif(ie.type == InputEventType.released):
+                self.refresh_display()
+            elif(ie.duration > 1.5):
+                self.set_mode(mode)
         else:
-            fp.set_power_led(LedColor.green)
-            fp.set_flash_text(20, '{:^12}'.format(mode2text[mode]))
-        kmode = mode
+            if(ie.type == InputEventType.hold):
+                if(ie.key == 'volume_down'):
+                    self.kmpd.volume_down()
+                elif(ie.key == 'volume_up'):
+                    self.kmpd.volume_up()
+                elif(ie.key == 'down'):
+                    self.kmpd.volume_down()
+                elif(ie.key == 'up'):
+                    self.kmpd.volume_up()
+            elif(ie.type == InputEventType.pressed):
+                try:
+                    function = key2function[ie.key]
+                except:
+                    function = None
+                if(function):
+                    function()
 
-def refresh_display():
-    global kmode
-    if kmode == Mode.music:
-        kmpd.refresh()
-    else:
-        fp.set_text('')
-
-key2mode = {
-    'red': Mode.music,
-    'green': Mode.video,
-    'power': Mode.standby,
-}
-key2function = {
-    'volume_down'    : kmpd.volume_down,
-    'volume_up'      : kmpd.volume_up,
-    'stop'           : kmpd.stop,
-    'play'           : kmpd.play_pause,
-    'next_track'     : kmpd.next,
-    'previous_track' : kmpd.previous,
-    'right'          : kmpd.next,
-    'left'           : kmpd.previous,
-    'down'           : kmpd.volume_down,
-    'up'             : kmpd.volume_up,
-    'ok'             : kmpd.play_pause,
-    'mute'           : kmpd.play_pause,
-}
-def inputevent_received(ie):
-    global kmpd
-    try:
-        mode = key2mode[ie.key]
-    except:
-        mode = None
-
-    if(ie.key == 'power') and (kmode == Mode.standby) and (ie.type == InputEventType.pressed):
-        mode = Mode.music
-        set_mode(mode)
-        return
-
-    print(ie)
-    if(mode != None):
-        if(ie.type == InputEventType.pressed):
-            fp.set_scrolling_text(1, 99, mode2text[mode])
-        elif(ie.type == InputEventType.released):
-            refresh_display()
-        elif(ie.duration > 1.5):
-            set_mode(mode)
-    else:
-        if(ie.type == InputEventType.hold):
-            if(ie.key == 'volume_down'):
-                kmpd.volume_down()
-            elif(ie.key == 'volume_up'):
-                kmpd.volume_up()
-            elif(ie.key == 'down'):
-                kmpd.volume_down()
-            elif(ie.key == 'up'):
-                kmpd.volume_up()
-        elif(ie.type == InputEventType.pressed):
-            try:
-                function = key2function[ie.key]
-            except:
-                function = None
-            if(function):
-                function()
-
-def main():
-    global kmode
-    kmpd.connect()
-    kiew = KmmInputEventWorker(fp, inputevent_received)
-    fp.clear()
-    fp.set_text('{:^12}'.format('KissMe'))
-    kiew.start()
-
-    set_mode(Mode.music)
-    refresh_display()
-
-    while True:
-        time.sleep(0.5)
-        change = kmpd.process()
-        if(kmode == Mode.standby) and (change == 'play'):
-            set_mode(Mode.music)
+    def mainloop(self):
+        while True:
+            time.sleep(0.5)
+            change = self.kmpd.process()
+            if(self.mode == Mode.standby) and (change == 'play'):
+                set_mode(Mode.music)
+            elif(change == 'stop') or (change == 'pause'):
+                pass
 
 if __name__ == "__main__":
-    main()
+    km = KissMe()
+    km.set_mode(Mode.music)
+    km.mainloop()
 
