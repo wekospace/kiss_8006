@@ -89,12 +89,16 @@ class KissMPD():
     @handle_idle
     def volume_down(self):
         self.__volume = self.__volume - 1
+        if(self.__volume < 0):
+            self.__volume = 0
         self.__client.setvol(self.__volume)
         self.display_volume()
 
     @handle_idle
     def volume_up(self):
         self.__volume = self.__volume + 1
+        if(self.__volume > 100):
+            self.__volume = 100
         self.__client.setvol(self.__volume)
         self.display_volume()
 
