@@ -50,6 +50,8 @@ class KissMPD():
         if(self.__songid):
             song = self.__client.currentsong()
             self.__fp.set_scrolling_text(3, 1, song['artist'] + ' - ' + song['title'])
+            time = divmod(int(song['time']), 60)
+            self.__fp.set_track_clock('0{0[0]:02}{0[1]:02}'.format(time))
         else:
             self.__fp.set_text('')
 
