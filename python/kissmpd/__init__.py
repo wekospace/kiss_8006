@@ -61,6 +61,13 @@ class KissMPD():
     def display_volume(self):
         self.__fp.set_flash_text(8, 'Volume: ' + str(self.__volume))
 
+    def display_state(self):
+        if(self.__state != 'play'):
+            self.__fp.clear()
+            self.__fp.set_text('{0:^12}'.format(self.__state))
+        else:
+            self.display_current_song()
+
     @handle_idle
     def update_status(self):
         status = self.__client.status()
@@ -81,6 +88,7 @@ class KissMPD():
         state = status['state']
         if(state != self.__state):
             self.__state = state
+            self.display_state()
             return state
 
         return None
