@@ -75,10 +75,22 @@ key2mode = {
     'green': Mode.video,
     'power': Mode.standby,
 }
-ignore_key = False
+key2function = {
+    'volume_down'    : kmpd.volume_down,
+    'volume_up'      : kmpd.volume_up,
+    'stop'           : kmpd.stop,
+    'play'           : kmpd.play_pause,
+    'next_track'     : kmpd.next,
+    'previous_track' : kmpd.previous,
+    'right'          : kmpd.next,
+    'left'           : kmpd.previous,
+    'down'           : kmpd.volume_down,
+    'up'             : kmpd.volume_up,
+    'ok'             : kmpd.play_pause,
+    'mute'           : kmpd.play_pause,
+}
 def inputevent_received(ie):
     global kmpd
-    global ignore_key
     try:
         mode = key2mode[ie.key]
     except:
@@ -93,33 +105,27 @@ def inputevent_received(ie):
     if(mode != None):
         if(ie.type == InputEventType.pressed):
             fp.set_scrolling_text(1, 99, mode2text[mode])
-            ignore_key = False
         elif(ie.type == InputEventType.released):
             refresh_display()
-            ignore_key = False
         elif(ie.duration > 1.5):
-            if not ignore_key:
-                set_mode(mode)
-            ignore_key = True
+            set_mode(mode)
     else:
         if(ie.type == InputEventType.hold):
             if(ie.key == 'volume_down'):
                 kmpd.volume_down()
             elif(ie.key == 'volume_up'):
                 kmpd.volume_up()
-        elif(ie.type == InputEventType.pressed):
-            if(ie.key == 'volume_down'):
+            elif(ie.key == 'down'):
                 kmpd.volume_down()
-            elif(ie.key == 'volume_up'):
+            elif(ie.key == 'up'):
                 kmpd.volume_up()
-            elif(ie.key == 'stop'):
-                kmpd.stop()
-            elif(ie.key == 'play'):
-                kmpd.play(toggle=True)
-            elif(ie.key == 'next_track'):
-                kmpd.next()
-            elif(ie.key == 'previous_track'):
-                kmpd.previous()
+        elif(ie.type == InputEventType.pressed):
+            try:
+                function = key2function[ie.key]
+            except:
+                function = None
+            if(function):
+                function()
 
 def main():
     kiew = KmmInputEventWorker(fp, inputevent_received)
