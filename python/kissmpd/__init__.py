@@ -96,7 +96,7 @@ class KissMPD():
 
     @handle_idle
     def previous(self):
-        self.__client.next()
+        self.__client.previous()
 
     @handle_idle
     def next(self):
