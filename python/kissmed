@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+
+import sys, os
+import time
+
+sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../'))
+
+from kmm import LedColor,InputEventType, KmmInputEventWorker
+from kmm.pi import KmmPi
+from relayboard import RelayBoard
+from kissmpd import KissMPD
+
+from enum import Enum
+class Mode(Enum):
+    (init, standby, music, video, console) = range(5)
+
+fp = KmmPi(debug=True)
+rb = RelayBoard()
+kmpd = KissMPD(fp)
+
+kmode = Mode.init
+
+mode2relay = {
+    Mode.init: [
+    ],
+    Mode.standby: [
+        ('all', False)
+    ],
+    Mode.music: [
+        ('switch', True),
+        ('tv', False),
+    ],
+    Mode.video: [
+        ('switch', True),
+        ('tv', True),
+    ],
+}
+
+mode2text = {
+    Mode.standby: '-- ',
+    Mode.music: 'Musique',
+    Mode.video: 'Video',
+}
+def set_mode(mode):
+    global kmode
+    if(mode != kmode):
+        for state in mode2relay[mode]: 
+            rb.set(state[0], state[1])
+
+        if(mode == Mode.music):
+            kmpd.connect()
+            kmpd.play()
+        else:
+            kmpd.pause()
+            kmpd.disconnect()
+
+        if(mode == Mode.standby):
+            fp.set_power_led(LedColor.red)
+            fp.set_text('')
+        else:
+            fp.set_power_led(LedColor.green)
+        kmode = mode
+    fp.set_flash_text(10, mode2text[mode])
+
+def refresh_display():
+    global kmode
+    if kmode == Mode.music:
+        kmpd.refresh()
+    else:
+        fp.set_text(None)
+
+key2mode = {
+    'red': Mode.music,
+    'green': Mode.video,
+    'power': Mode.standby,
+}
+ignore_key = False
+def inputevent_received(ie):
+    global kmpd
+    global ignore_key
+    try:
+        mode = key2mode[ie.key]
+    except:
+        mode = None
+
+    if(ie.key == 'power') and (kmode == Mode.standby) and (ie.type == InputEventType.pressed):
+        mode = Mode.music
+        set_mode(mode)
+        return
+
+    print(ie)
+    if(mode != None):
+        if(ie.type == InputEventType.pressed):
+            fp.set_scrolling_text(1, 99, mode2text[mode])
+            ignore_key = False
+        elif(ie.type == InputEventType.released):
+            refresh_display()
+            ignore_key = False
+        elif(ie.duration > 1.5):
+            if not ignore_key:
+                set_mode(mode)
+            ignore_key = True
+    else:
+        if(ie.type == InputEventType.hold):
+            if(ie.key == 'volume_down'):
+                kmpd.volume_down()
+            elif(ie.key == 'volume_up'):
+                kmpd.volume_up()
+        elif(ie.type == InputEventType.pressed):
+            if(ie.key == 'volume_down'):
+                kmpd.volume_down()
+            elif(ie.key == 'volume_up'):
+                kmpd.volume_up()
+            elif(ie.key == 'stop'):
+                kmpd.stop()
+            elif(ie.key == 'play'):
+                kmpd.play(toggle=True)
+            elif(ie.key == 'next_track'):
+                kmpd.next()
+            elif(ie.key == 'previous_track'):
+                kmpd.previous()
+
+def main():
+    kiew = KmmInputEventWorker(fp, inputevent_received)
+    fp.set_text('KissMe')
+    kiew.start()
+
+    set_mode(Mode.music)
+    refresh_display()
+
+    while True:
+        time.sleep(0.5)
+        if kmode == Mode.music:
+            kmpd.process()
+
+if __name__ == "__main__":
+    main()
+
