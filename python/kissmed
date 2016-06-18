@@ -4,6 +4,7 @@ import sys, os
 import time
 
 sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../'))
+sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../share/pyshared'))
 
 from kmm import LedColor,InputEventType, KmmInputEventWorker
 from kmm.pi import KmmPi
