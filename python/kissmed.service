@@ -1,0 +1,10 @@
+[Unit]
+Description=KissMe daemon
+
+[Service]
+ExecStart=/usr/local/bin/kissmed
+Type=idle
+User=pi
+
+[Install]
+WantedBy=multi-user.target
