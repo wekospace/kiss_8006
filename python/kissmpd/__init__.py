@@ -42,7 +42,6 @@ class KissMPD():
             changes = self.__idle_client.fetch_idle()
             self.__idle_client.send_idle() # continue idling
             change = self.update_status()
-            print('process: ',change)
             return change
         return None
 
