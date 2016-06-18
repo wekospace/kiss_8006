@@ -2,4 +2,4 @@
 Description=KissMe Kodi remote
 
 [Service]
-ExecStart=/usr/local/bin/kodiremote.py
+ExecStart=/usr/local/bin/kodiremote
