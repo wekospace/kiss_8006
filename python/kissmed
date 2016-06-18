@@ -57,7 +57,7 @@ def set_mode(mode):
 
         if(mode == Mode.standby):
             fp.set_power_led(LedColor.red)
-            fp.set_text('')
+            fp.clear()
         else:
             fp.set_power_led(LedColor.green)
             fp.set_flash_text(20, '{:^12}'.format(mode2text[mode]))
@@ -68,7 +68,7 @@ def refresh_display():
     if kmode == Mode.music:
         kmpd.refresh()
     else:
-        fp.set_text(None)
+        fp.set_text('')
 
 key2mode = {
     'red': Mode.music,
@@ -123,7 +123,8 @@ def inputevent_received(ie):
 
 def main():
     kiew = KmmInputEventWorker(fp, inputevent_received)
-    fp.set_text('KissMe')
+    fp.clear()
+    fp.set_text('{:^12}'.format('KissMe'))
     kiew.start()
 
     set_mode(Mode.music)
