@@ -135,8 +135,7 @@ class Kmm():
         self.__input_button_callback = function
 
     def __frame_received(self, frame):
-        if(self.__input_button_callback != None):
-            kie = self.__kied.decode(frame[3:])
+        self.__kied.decode(frame[3:])
 
     def __del__(self):
         if self.__async: self.__io.terminate()
