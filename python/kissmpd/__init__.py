@@ -10,6 +10,7 @@ class KissMPD():
             res = func(self, *args, **kwargs)
             self.__client.send_idle()
             self.__lock.release()
+            return res
         return inner
 
     def __init__(self, fp):
@@ -40,7 +41,10 @@ class KissMPD():
         if canRead:
             changes = self.__idle_client.fetch_idle()
             self.__idle_client.send_idle() # continue idling
-            self.update_status()
+            change = self.update_status()
+            print('process: ',change)
+            return change
+        return None
 
     @handle_idle
     def refresh(self):
@@ -61,6 +65,7 @@ class KissMPD():
     @handle_idle
     def update_status(self):
         status = self.__client.status()
+
         try:
             songid = status['songid']
         except:
@@ -73,6 +78,13 @@ class KissMPD():
         if(int(status['volume']) != self.__volume):
             self.__volume = int(status['volume'])
             self.display_volume()
+
+        state = status['state']
+        if(state != self.__state):
+            self.__state = state
+            return state
+
+        return None
 
     @handle_idle
     def volume_down(self):
