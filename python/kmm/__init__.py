@@ -296,11 +296,8 @@ class KmmInputEventWorker(Thread):
 
     def run(self):
         while(True):
-            try:
-                ie = self.__queue.get()
-                self.__callback(ie)
-            except:
-                pass
+            ie = self.__queue.get()
+            self.__callback(ie)
 
 class KmmInputEvent:
     def __init__(self, key, type, timestamp, duration=0.0):
