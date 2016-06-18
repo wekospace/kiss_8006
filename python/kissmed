@@ -60,8 +60,8 @@ def set_mode(mode):
             fp.set_text('')
         else:
             fp.set_power_led(LedColor.green)
+            fp.set_flash_text(20, '{:^12}'.format(mode2text[mode]))
         kmode = mode
-    fp.set_flash_text(10, mode2text[mode])
 
 def refresh_display():
     global kmode
