@@ -49,11 +49,9 @@ def set_mode(mode):
             rb.set(state[0], state[1])
 
         if(mode == Mode.music):
-            kmpd.connect()
             kmpd.play()
         else:
             kmpd.pause()
-            kmpd.disconnect()
 
         if(mode == Mode.standby):
             fp.set_power_led(LedColor.red)
@@ -128,6 +126,8 @@ def inputevent_received(ie):
                 function()
 
 def main():
+    global kmode
+    kmpd.connect()
     kiew = KmmInputEventWorker(fp, inputevent_received)
     fp.clear()
     fp.set_text('{:^12}'.format('KissMe'))
@@ -138,8 +138,9 @@ def main():
 
     while True:
         time.sleep(0.5)
-        if kmode == Mode.music:
-            kmpd.process()
+        change = kmpd.process()
+        if(kmode == Mode.standby) and (change == 'play'):
+            set_mode(Mode.music)
 
 if __name__ == "__main__":
     main()
