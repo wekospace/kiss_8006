@@ -276,6 +276,26 @@ class KmmInputEventDecoder:
             kie = KmmInputEvent(button_key, iet, timestamp)
             self.__kmm._Kmm__input_button_callback(kie)
 
+from threading import Thread
+from queue import Queue
+class KmmInputEventWorker(Thread):
+    def __init__(self, kmm, callback):
+        Thread.__init__(self)
+        self.__queue = Queue()
+        self.__callback = callback
+        kmm.register_input_button_callback(self.put)
+
+    def put(self, ie):
+        self.__queue.put(ie, False)
+
+    def run(self):
+        while(True):
+            try:
+                ie = self.__queue.get()
+                self.__callback(ie)
+            except:
+                pass
+
 class KmmInputEvent:
     def __init__(self, key, type, timestamp, duration=0.0):
         self.timestamp = timestamp
