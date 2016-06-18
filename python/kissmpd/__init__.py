@@ -56,7 +56,7 @@ class KissMPD():
             time = divmod(int(song['time']), 60)
             self.__fp.set_track_clock('0{0[0]:02}{0[1]:02}'.format(time))
         else:
-            self.__fp.set_text('')
+            self.__fp.clear()
 
     def display_volume(self):
         self.__fp.set_flash_text(8, 'Volume: ' + str(self.__volume))

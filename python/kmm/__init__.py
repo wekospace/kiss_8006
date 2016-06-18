@@ -46,7 +46,10 @@ class Kmm():
         return self.send_raw_payload(list(command.encode('iso8859-1', errors='replace')))
 
     def set_text(self, text):
-        self.send_command("VD" + text)
+        if text is None:
+            self.send_command("Vw")
+        else:
+            self.send_command("VD" + text)
 
     def set_flash_text(self, duration, text):
         self.send_command("VF" + '%0*d' % (2, duration) + text)
@@ -90,7 +93,10 @@ class Kmm():
             self.send_command("VT" + text)
 
     def clear(self):
-        self.send_command("Vw")
+        self.set_text(None)
+        self.set_clock(None)
+        self.set_track_clock(None)
+
 
     def poweroff(self, delay):
         self.send_command("CW" + '%0*d' % (2, delay))
