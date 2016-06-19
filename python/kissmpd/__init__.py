@@ -122,7 +122,7 @@ class KissMPD():
 
     @handle_idle
     def pause(self):
-        self.__client.pause()
+        self.__client.pause(1)
 
     @handle_idle
     def previous(self):
