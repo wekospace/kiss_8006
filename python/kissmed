@@ -10,6 +10,7 @@ from kmm import LedColor,InputEventType, KmmInputEventWorker
 from kmm.pi import KmmPi
 from relayboard import RelayBoard
 from kissmpd import KissMPD
+from kisskodi import KissKodi
 
 from enum import Enum
 class Mode(Enum):
@@ -21,6 +22,7 @@ class KissMe:
         self.fp = KmmPi(debug=False)
         self.rb = RelayBoard()
         self.kmpd = KissMPD(self.fp)
+        self.kkodi = KissKodi(self.fp)
         self.mode = Mode.init
         self.idle = True
         self.shutdown_timer = None
@@ -122,6 +124,8 @@ class KissMe:
         else:
             if(self.mode == Mode.music):
                 self.kmpd.handle_inputevent(ie)
+            elif(self.mode == Mode.video):
+                self.kkodi.handle_inputevent(ie)
 
     def mainloop(self):
         while True:
