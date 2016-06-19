@@ -20,6 +20,9 @@ class KissKodi:
                 self.__client.send_action(action, ACTION_BUTTON)
                 self.__fp.set_text(str(action))
 
+    def stop(self):
+        self.__client.send_action('Stop',ACTION_BUTTON)
+
     def ping(self):
         self.__client.ping()
 
