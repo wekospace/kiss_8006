@@ -1,50 +1,30 @@
 #!/usr/bin/env python3
 
-# This is a simple example showing how you can send a key press event
-# to XBMC using the XBMCClient class
-
-import sys, os
-sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../'))
-sys.path.append(os.path.join(os.path.realpath(os.path.dirname(__file__)), '../share/pyshared'))
-
 import time
-from kodi.xbmcclient import XBMCClient,ACTION_EXECBUILTIN,ACTION_BUTTON
+from kisskodi.xbmcclient import XBMCClient,ACTION_EXECBUILTIN,ACTION_BUTTON
 
-from kmm.pi import KmmPi
-from kmm import LedColor,InputEventType
+from kmm import InputEventType
 
-from kodi.kmm_mapping import button_to_action
+from kisskodi.kmm_mapping import button_to_action
 
-def main():
-    # Create an XBMCClient object and connect
-    xbmc = XBMCClient("KissMe remote")
-    xbmc.connect()
+class KissKodi:
+    def __init__(self, fp):
+        self.__client = XBMCClient("KissMe remote")
+        self.__client.connect()
+        self.__fp = fp
 
-    kmm = KmmPi()
-    kmm.set_text('Kodi KMM')
-    kmm.set_power_led(LedColor.green)
-
-    def button_received(button):
-        print(str(button))
-        action = button_to_action(button.key)
+    def handle_inputevent(self, ie):
+        action = button_to_action(ie.key)
         if action != None:
-            if button.type == InputEventType.pressed:
-                xbmc.send_action(action, ACTION_BUTTON)
-        kmm.set_text(str(action))
-        kmm.check_irq_pin()
+            if ie.type == InputEventType.pressed:
+                self.__client.send_action(action, ACTION_BUTTON)
+                self.__fp.set_text(str(action))
 
-    kmm.register_input_button_callback(button_received)
+    def ping(self):
+        self.__client.ping()
 
-    while True:
-        time.sleep(10)
-        if not xbmc.ping():
-            xbmc.connect()
+    def connect(self):
+        self.__client.connect()
 
-    # ok we're done, close the connection
-    # Note that closing the connection clears any repeat key that is
-    # active. So in this example, the actual release button event above
-    # need not have been sent.
-    xbmc.close()
-
-if __name__=="__main__":
-    main()
+    def disconnect(self):
+        self.__client.close()
