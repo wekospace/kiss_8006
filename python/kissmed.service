@@ -2,7 +2,7 @@
 Description=KissMe daemon
 
 [Service]
-ExecStart=/usr/local/bin/kissmed
+ExecStart=/usr/bin/python3 -u -W all /usr/local/bin/kissmed
 Type=idle
 User=pi
 
