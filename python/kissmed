@@ -91,8 +91,8 @@ class KissMe:
     def refresh_display(self):
         if self.mode == Mode.music:
             self.kmpd.refresh()
-        else:
-            self.fp.clear()
+        elif self.mode == Mode.video:
+            self.fp.set_text('{:^12}'.format(self.mode2text[self.mode]))
 
     key2mode = {
         'red': Mode.music,
