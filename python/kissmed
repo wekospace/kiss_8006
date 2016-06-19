@@ -15,12 +15,15 @@ from enum import Enum
 class Mode(Enum):
     (init, standby, music, video, console) = range(5)
 
+from threading import Timer
 class KissMe:
     def __init__(self):
         self.fp = KmmPi(debug=False)
         self.rb = RelayBoard()
         self.kmpd = KissMPD(self.fp)
         self.mode = Mode.init
+        self.idle = True
+        self.shutdown_timer = None
 
         self.kmpd.connect()
         kiew = KmmInputEventWorker(self.fp, self.inputevent_received)
@@ -52,6 +55,7 @@ class KissMe:
 
     def set_mode(self, mode):
         if(mode != self.mode):
+            self.mode = mode
             for state in self.mode2relay[mode]:
                 self.rb.set(state[0], state[1])
 
@@ -60,15 +64,29 @@ class KissMe:
             else:
                 self.kmpd.pause()
 
+            self.fp.clear()
             if(mode == Mode.standby):
                 self.fp.set_power_led(LedColor.red)
-                self.fp.clear()
+                self.idle = True
+            else:
+                self.set_idle(False)
+                self.fp.set_flash_text(20, '{:^12}'.format(self.mode2text[mode]))
+                time.sleep(1)
+
+            self.refresh_display()
+
+    def set_idle(self, idle):
+        if(idle != self.idle):
+            if(idle):
+                self.fp.set_power_led(LedColor.orange)
+                self.shutdown_timer = Timer(120, self.set_mode, [Mode.standby])
+                self.shutdown_timer.start()
             else:
                 self.fp.set_power_led(LedColor.green)
-                self.fp.set_flash_text(20, '{:^12}'.format(self.mode2text[mode]))
-
-            self.mode = mode
-            self.refresh_display()
+                if self.shutdown_timer:
+                    self.shutdown_timer.cancel()
+                self.shutdown_timer = None
+            self.idle = idle
 
     def refresh_display(self):
         if self.mode == Mode.music:
@@ -140,8 +158,10 @@ class KissMe:
             change = self.kmpd.process()
             if(self.mode == Mode.standby) and (change == 'play'):
                 set_mode(Mode.music)
-            elif(change == 'stop') or (change == 'pause'):
-                pass
+            elif(self.mode == Mode.music) and ((change == 'stop') or (change == 'pause')):
+                self.set_idle(True)
+            elif(change):
+                self.set_idle(False)
 
 if __name__ == "__main__":
     km = KissMe()
