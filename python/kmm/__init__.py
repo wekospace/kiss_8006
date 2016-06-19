@@ -37,6 +37,7 @@ class Kmm():
 
     def send_raw_payload(self, payload):
         header = [0x23, 0x00, 0x00]
+        payload = payload[0:95]
         lenght = len(payload) + len(header)
         header[1] = 0x30 + int(lenght / 10)
         header[2] = 0x30 + (lenght % 10)
