@@ -101,21 +101,6 @@ class KissMe:
     }
 
     def inputevent_received(self, ie):
-        key2function = {
-            'volume_down'    : self.kmpd.volume_down,
-            'volume_up'      : self.kmpd.volume_up,
-            'stop'           : self.kmpd.stop,
-            'play'           : self.kmpd.play_pause,
-            'next_track'     : self.kmpd.next,
-            'previous_track' : self.kmpd.previous,
-            'right'          : self.kmpd.next,
-            'left'           : self.kmpd.previous,
-            'down'           : self.kmpd.volume_down,
-            'up'             : self.kmpd.volume_up,
-            'ok'             : self.kmpd.play_pause,
-            'mute'           : self.kmpd.play_pause,
-        }
-
         try:
             mode = self.key2mode[ie.key]
         except:
@@ -135,22 +120,8 @@ class KissMe:
             elif(ie.duration > 1.5):
                 self.set_mode(mode)
         else:
-            if(ie.type == InputEventType.hold):
-                if(ie.key == 'volume_down'):
-                    self.kmpd.volume_down()
-                elif(ie.key == 'volume_up'):
-                    self.kmpd.volume_up()
-                elif(ie.key == 'down'):
-                    self.kmpd.volume_down()
-                elif(ie.key == 'up'):
-                    self.kmpd.volume_up()
-            elif(ie.type == InputEventType.pressed):
-                try:
-                    function = key2function[ie.key]
-                except:
-                    function = None
-                if(function):
-                    function()
+            if(self.mode == Mode.music):
+                self.kmpd.handle_inputevent(ie)
 
     def mainloop(self):
         while True:

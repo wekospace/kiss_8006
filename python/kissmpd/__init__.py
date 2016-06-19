@@ -1,6 +1,8 @@
 from musicpd import (MPDClient, CommandError)
 from select import select
 
+from kmm import InputEventType
+
 import threading
 class KissMPD():
     def handle_idle(func):
@@ -135,3 +137,32 @@ class KissMPD():
     @handle_idle
     def stop(self):
         self.__client.stop()
+
+    def handle_inputevent(self, ie):
+        key2function = {
+            'volume_down'    : self.volume_down,
+            'volume_up'      : self.volume_up,
+            'stop'           : self.stop,
+            'play'           : self.play_pause,
+            'next_track'     : self.next,
+            'previous_track' : self.previous,
+            'right'          : self.next,
+            'left'           : self.previous,
+            'down'           : self.volume_down,
+            'up'             : self.volume_up,
+            'ok'             : self.play_pause,
+            'mute'           : self.play_pause,
+        }
+        try:
+            function = key2function[ie.key]
+        except:
+            function = None
+        if not function:
+            return False
+
+        if(ie.type == InputEventType.hold):
+            if(function == self.volume_down) or (function == self.volume_up):
+                function()
+        elif(ie.type == InputEventType.pressed):
+            function()
+        return True
