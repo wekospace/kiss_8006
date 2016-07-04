@@ -54,7 +54,12 @@ class KissMPD():
     def display_current_song(self):
         if(self.__songid):
             song = self.__client.currentsong()
-            self.__fp.set_scrolling_text(3, 1, song['artist'] + ' - ' + song['title'])
+            try:
+                text = song['artist'] + ' - ' + song['title']
+            except:
+                text = song['file'].split('/')[-1]
+
+            self.__fp.set_scrolling_text(3, 1, text)
             time = divmod(int(song['time']), 60)
             self.__fp.set_track_clock('0{0[0]:02}{0[1]:02}'.format(time))
         else:
