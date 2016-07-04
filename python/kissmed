@@ -42,10 +42,12 @@ class KissMe:
             ('all', False)
         ],
         Mode.music: [
+            ('amplifier', True),
             ('switch', True),
             ('tv', False),
         ],
         Mode.video: [
+            ('amplifier', True),
             ('switch', True),
             ('tv', True),
         ],

@@ -26,6 +26,7 @@ class RelayBoard():
         'IN6': 5,
         'IN7': 6,
         'IN8': 7,
+        'amplifier': 0,
         'tv': 1,
         'wii': 4,
         'switch': 7,
