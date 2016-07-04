@@ -17,15 +17,17 @@ class Mode(Enum):
     (init, standby, music, video, console) = range(5)
 
 from threading import Timer
+from threading import Lock
 class KissMe:
     def __init__(self):
         self.fp = KmmPi(debug=False)
         self.rb = RelayBoard()
         self.kmpd = KissMPD(self.fp)
         self.kkodi = KissKodi(self.fp)
-        self.mode = Mode.init
+        self.__mode = Mode.init
         self.idle = True
         self.shutdown_timer = None
+        self.__lock = Lock()
 
         self.kmpd.connect()
         kiew = KmmInputEventWorker(self.fp, self.inputevent_received)
@@ -55,8 +57,15 @@ class KissMe:
         Mode.video: 'Video',
     }
 
+    def get_mode(self):
+        self.__lock.acquire()
+        mode = self.__mode
+        self.__lock.release()
+        return mode
+
     def set_mode(self, mode):
-        if(mode != self.mode):
+        self.__lock.acquire()
+        if(mode != self.__mode):
             for state in self.mode2relay[mode]:
                 self.rb.set(state[0], state[1])
 
@@ -65,10 +74,10 @@ class KissMe:
             else:
                 self.kmpd.pause()
 
-            if(self.mode == Mode.video): # WAS video
+            if(self.__mode == Mode.video): # WAS video
                 self.kkodi.stop()
 
-            self.mode = mode
+            self.__mode = mode
 
             self.fp.clear()
             if(mode == Mode.standby):
@@ -77,9 +86,10 @@ class KissMe:
             else:
                 self.set_idle(False)
                 self.fp.set_flash_text(20, '{:^12}'.format(self.mode2text[mode]))
-                time.sleep(1)
 
-            self.refresh_display()
+        self.__lock.release()
+        time.sleep(1)
+        self.refresh_display()
 
     def set_idle(self, idle):
         if(idle != self.idle):
@@ -95,10 +105,11 @@ class KissMe:
             self.idle = idle
 
     def refresh_display(self):
-        if self.mode == Mode.music:
+        mode = self.get_mode()
+        if mode == Mode.music:
             self.kmpd.refresh()
-        elif self.mode == Mode.video:
-            self.fp.set_text('{:^12}'.format(self.mode2text[self.mode]))
+        elif mode == Mode.video:
+            self.fp.set_text('{:^12}'.format(self.mode2text[mode]))
 
     key2mode = {
         'red': Mode.music,
@@ -108,36 +119,41 @@ class KissMe:
 
     def inputevent_received(self, ie):
         try:
-            mode = self.key2mode[ie.key]
+            target_mode = self.key2mode[ie.key]
         except:
-            mode = None
+            target_mode = None
 
-        if(ie.key == 'power') and (self.mode == Mode.standby) and (ie.type == InputEventType.pressed):
-            mode = Mode.music
-            self.set_mode(mode)
+        mode = self.get_mode()
+        if(ie.key == 'power') and (mode == Mode.standby) and (ie.type == InputEventType.pressed):
+            target_mode = Mode.music
+            self.set_mode(target_mode)
             return
 
         print(ie)
-        if(mode != None):
+        if(target_mode != None):
             if(ie.type == InputEventType.pressed):
-                self.fp.set_scrolling_text(1, 99, self.mode2text[mode])
+                self.fp.set_scrolling_text(1, 99, self.mode2text[target_mode])
             elif(ie.type == InputEventType.released):
                 self.refresh_display()
             elif(ie.duration > 1.5):
-                self.set_mode(mode)
+                self.set_mode(target_mode)
         else:
-            if(self.mode == Mode.music):
+            if(mode == Mode.music):
                 self.kmpd.handle_inputevent(ie)
-            elif(self.mode == Mode.video):
+            elif(mode == Mode.video):
                 self.kkodi.handle_inputevent(ie)
 
     def mainloop(self):
         while True:
             time.sleep(0.5)
             change = self.kmpd.process()
-            if(self.mode == Mode.standby) and (change == 'play'):
-                set_mode(Mode.music)
-            elif(self.mode == Mode.music) and ((change == 'stop') or (change == 'pause')):
+            if(not change):
+                continue
+            mode = self.get_mode()
+            if(mode == Mode.standby):
+                if(change == 'play'):
+                    self.set_mode(Mode.music)
+            elif(mode == Mode.music) and ((change == 'stop') or (change == 'pause')):
                 self.set_idle(True)
             elif(change):
                 self.set_idle(False)
