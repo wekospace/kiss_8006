@@ -97,7 +97,7 @@ class KissMe:
         if(idle != self.idle):
             if(idle):
                 self.fp.set_power_led(LedColor.orange)
-                self.shutdown_timer = Timer(120, self.set_mode, [Mode.standby])
+                self.shutdown_timer = Timer(300, self.set_mode, [Mode.standby])
                 self.shutdown_timer.start()
             else:
                 self.fp.set_power_led(LedColor.green)
