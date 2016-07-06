@@ -60,8 +60,11 @@ class KissMPD():
                 text = song['file'].split('/')[-1]
 
             self.__fp.set_scrolling_text(3, 1, text)
-            time = divmod(int(song['time']), 60)
-            self.__fp.set_track_clock('0{0[0]:02}{0[1]:02}'.format(time))
+            try:
+                time = divmod(int(song['time']), 60)
+                self.__fp.set_track_clock('0{0[0]:02}{0[1]:02}'.format(time))
+            except:
+                self.__fp.set_track_clock(None)
         else:
             self.__fp.clear()
 
