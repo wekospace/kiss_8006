@@ -375,10 +375,7 @@ NoConn ~ 1700 1800
 NoConn ~ 1900 1800
 NoConn ~ 2000 1800
 NoConn ~ 2700 1800
-NoConn ~ 2800 2600
-NoConn ~ 2900 2600
 NoConn ~ 1900 2600
-NoConn ~ 1700 2600
 Wire Wire Line
 	950  1550 950  2700
 Wire Wire Line
@@ -445,27 +442,20 @@ Wire Wire Line
 	1300 4500 1400 4500
 Wire Wire Line
 	1400 4500 1400 4550
-NoConn ~ 1800 2600
 Wire Wire Line
-	2500 2600 2500 3750
+	1700 3900 3050 3900
 Wire Wire Line
-	2500 3750 3050 3750
+	1500 2600 1500 4300
 Wire Wire Line
-	2500 1800 2500 1150
+	1500 4300 3050 4300
 Wire Wire Line
-	2500 1150 3050 1150
+	2600 2600 2600 4100
 Wire Wire Line
-	1500 2600 1500 3850
+	2600 4100 3050 4100
 Wire Wire Line
-	1500 3850 3050 3850
+	2700 2600 2700 4000
 Wire Wire Line
-	2600 2600 2600 3650
-Wire Wire Line
-	2600 3650 3050 3650
-Wire Wire Line
-	2700 2600 2700 3550
-Wire Wire Line
-	2700 3550 3050 3550
+	2700 4000 3050 4000
 Wire Wire Line
 	2400 1800 2400 1050
 Wire Wire Line
@@ -491,18 +481,18 @@ Wire Wire Line
 NoConn ~ 1300 2600
 NoConn ~ 1400 2600
 NoConn ~ 2200 1800
-Text Label 2900 3850 0    60   ~ 0
+Text Label 2750 4300 0    60   ~ 0
+RB_EN
+Text Label 2900 4200 0    60   ~ 0
 IN1
-Text Label 2900 3750 0    60   ~ 0
+Text Label 2900 4100 0    60   ~ 0
 IN2
-Text Label 2900 3650 0    60   ~ 0
+Text Label 2900 4000 0    60   ~ 0
 IN3
-Text Label 2900 3550 0    60   ~ 0
-IN4
 Text Label 2900 1050 0    60   ~ 0
-IN6
-Text Label 2900 1150 0    60   ~ 0
 IN5
+Text Label 2900 3900 0    60   ~ 0
+IN4
 $Comp
 L CONN_01X10 P3
 U 1 1 5708FC04
@@ -528,10 +518,6 @@ Wire Wire Line
 	6050 4400 5650 4400
 Wire Wire Line
 	6050 4500 5650 4500
-Wire Wire Line
-	5450 4800 6050 4800
-NoConn ~ 6050 4700
-NoConn ~ 6050 4600
 $Comp
 L GND #PWR016
 U 1 1 57090222
@@ -543,31 +529,18 @@ F 3 "" H 5450 4000 50  0000 C CNN
 	1    5450 4000
 	1    0    0    -1  
 $EndComp
-Text Label 5650 4000 0    60   ~ 0
-IN1
 Text Label 5650 4100 0    60   ~ 0
-IN2
+IN1
 Text Label 5650 4200 0    60   ~ 0
-IN3
+IN2
 Text Label 5650 4300 0    60   ~ 0
-IN4
+IN3
 Text Label 5650 4400 0    60   ~ 0
-IN5
+IN4
 Text Label 5650 4500 0    60   ~ 0
+IN5
+Text Label 5650 4600 0    60   ~ 0
 IN6
-$Comp
-L +3.3V #PWR017
-U 1 1 570902FE
-P 5450 4700
-F 0 "#PWR017" H 5450 4550 50  0001 C CNN
-F 1 "+3.3V" H 5450 4840 50  0000 C CNN
-F 2 "" H 5450 4700 50  0000 C CNN
-F 3 "" H 5450 4700 50  0000 C CNN
-	1    5450 4700
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5450 4800 5450 4700
 Wire Wire Line
 	5450 3900 5450 4000
 $Comp
@@ -709,8 +682,45 @@ F 3 "" H 950 1950 50  0000 C CNN
 $EndComp
 NoConn ~ 2900 1800
 NoConn ~ 3000 1800
-NoConn ~ 3100 1800
 NoConn ~ 4050 2100
 NoConn ~ 4050 1700
 NoConn ~ 4050 1600
+Wire Wire Line
+	1800 4200 3050 4200
+Wire Wire Line
+	2800 2600 2800 3700
+Wire Wire Line
+	2800 3700 3050 3700
+Wire Wire Line
+	2900 2600 2900 3600
+Wire Wire Line
+	2900 3600 3050 3600
+Text Label 2900 3700 0    60   ~ 0
+IN6
+Text Label 2900 3600 0    60   ~ 0
+IN7
+Wire Wire Line
+	3100 1800 3100 1500
+Wire Wire Line
+	3100 1500 3400 1500
+Text Label 3100 1500 0    60   ~ 0
+IN8
+NoConn ~ 2500 1800
+NoConn ~ 2500 2600
+Wire Wire Line
+	1800 2600 1800 4200
+Wire Wire Line
+	1700 3900 1700 2600
+Wire Wire Line
+	6050 4600 5650 4600
+Wire Wire Line
+	6050 4700 5650 4700
+Wire Wire Line
+	6050 4800 5650 4800
+Text Label 5650 4700 0    60   ~ 0
+IN7
+Text Label 5650 4800 0    60   ~ 0
+IN8
+Text Label 5650 4000 0    60   ~ 0
+RB_EN
 $EndSCHEMATC
