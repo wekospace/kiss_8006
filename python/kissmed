@@ -28,6 +28,7 @@ class KissMe:
         self.idle = True
         self.shutdown_timer = None
         self.__lock = Lock()
+        self.luz = False
 
         self.kmpd.connect()
         kiew = KmmInputEventWorker(self.fp, self.inputevent_received)
@@ -119,6 +120,15 @@ class KissMe:
         'power': Mode.standby,
     }
 
+    def toggle_luz(self):
+        if(self.luz == True):
+            self.luz = False
+        else:
+            self.luz = True
+
+        self.rb.set('luz', self.luz)
+        self.fp.set_symbol_antenna(self.luz)
+
     def inputevent_received(self, ie):
         try:
             target_mode = self.key2mode[ie.key]
@@ -129,6 +139,10 @@ class KissMe:
         if(ie.key == 'power') and (mode == Mode.standby) and (ie.type == InputEventType.pressed):
             target_mode = Mode.music
             self.set_mode(target_mode)
+            return
+
+        if(ie.key == 'blue') and (ie.type == InputEventType.pressed):
+            self.toggle_luz()
             return
 
         print(ie)

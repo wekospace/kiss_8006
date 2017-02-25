@@ -98,6 +98,11 @@ class Kmm():
         self.set_clock(None)
         self.set_track_clock(None)
 
+    def set_symbol_antenna(self, state):
+        if state:
+            self.send_command("VSa1")
+        else:
+            self.send_command("VSa0")
 
     def poweroff(self, delay):
         self.send_command("CW" + '%0*d' % (2, delay))
