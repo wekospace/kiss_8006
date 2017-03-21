@@ -23,10 +23,10 @@ class KissKodi:
             if(ie.type == InputEventType.hold):
                 if(ie.key == 'volume_down') or (ie.key == 'volume_up'):
                     self.__client.send_action(action, ACTION_BUTTON)
-                    self.__fp.set_text(str(action))
+                    self.__fp.set_flash_text(10, '{:^12}'.format(str(action)))
             elif(ie.type == InputEventType.pressed):
                 self.__client.send_action(action, ACTION_BUTTON)
-                self.__fp.set_text(str(action))
+                self.__fp.set_flash_text(10, '{:^12}'.format(str(action)))
 
     def stop(self):
         self.__client.send_action('Stop',ACTION_BUTTON)
