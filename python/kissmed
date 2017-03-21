@@ -161,7 +161,7 @@ class KissMe:
                 self.fp.set_scrolling_text(1, 99, self.mode2text[target_mode])
             elif(ie.type == InputEventType.released):
                 self.refresh_display()
-            elif(ie.duration > 1.5):
+            elif(ie.duration > 1):
                 self.set_mode(target_mode)
         else:
             if(mode == Mode.music):
