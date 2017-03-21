@@ -46,11 +46,19 @@ class KissMe:
             ('amplifier', True),
             ('switch', True),
             ('tv', False),
+            ('wii', False),
         ],
         Mode.video: [
             ('amplifier', True),
             ('switch', True),
             ('tv', True),
+            ('wii', False),
+        ],
+        Mode.console: [
+            ('amplifier', False),
+            ('switch', False),
+            ('tv', True),
+            ('wii', True),
         ],
     }
 
@@ -58,6 +66,7 @@ class KissMe:
         Mode.standby: '-- ',
         Mode.music: 'Musique',
         Mode.video: 'Video',
+        Mode.console: 'Console',
     }
 
     def get_mode(self):
@@ -117,6 +126,7 @@ class KissMe:
     key2mode = {
         'red': Mode.music,
         'green': Mode.video,
+        'yellow': Mode.console,
         'power': Mode.standby,
     }
 
