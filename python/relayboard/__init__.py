@@ -46,7 +46,7 @@ class RelayBoard():
         else:
             raise NameError('Unkown function: ', function)
 
-        if(status == 'on') or (status == True):
+        if(status == 'on') or (status == True) or (status == '1'):
             status = True
         else:
             status = False
