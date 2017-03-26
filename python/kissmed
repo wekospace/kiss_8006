@@ -120,7 +120,7 @@ class KissMe:
         mode = self.get_mode()
         if mode == Mode.music:
             self.kmpd.refresh()
-        elif mode == Mode.video:
+        else:
             self.fp.set_text('{:^12}'.format(self.mode2text[mode]))
 
     key2mode = {
