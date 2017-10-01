@@ -1,0 +1,3 @@
+[submodule "pikmm/rpi_lib"]
+	path = pikmm/rpi_lib
+	url = https://github.com/mivade/rpi_lib.git
